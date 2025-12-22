@@ -9,16 +9,7 @@ phpunit.xml.local
 phpunit.xml.bak
 
 # Test resources and sensitive data
-tests/bootstrap.php
-tests/resources/
-tests/config/
-tests/*.env
-tests/*.env.*
-tests/*.local.*
-tests/fixtures/
-tests/data/
-*.test.*
-*.test.local.*
+tests/
 
 # IDE support files
 .idea/
