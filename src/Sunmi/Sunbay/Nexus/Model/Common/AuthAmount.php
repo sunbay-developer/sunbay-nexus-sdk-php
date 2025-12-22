@@ -1,0 +1,75 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Sunmi\Sunbay\Nexus\Model\Common;
+
+/**
+ * Authorization amount information
+ * Supports: orderAmount, pricingCurrency only
+ * Used for: Auth, ForcedAuth, IncrementalAuth
+ *
+ * @author Andy Li
+ * @since 2025-12-19
+ */
+class AuthAmount
+{
+    private ?float $orderAmount = null;
+    private ?string $pricingCurrency = null;
+
+    public function getOrderAmount(): ?float
+    {
+        return $this->orderAmount;
+    }
+
+    public function setOrderAmount(?float $orderAmount): self
+    {
+        $this->orderAmount = $orderAmount;
+        return $this;
+    }
+
+    public function getPricingCurrency(): ?string
+    {
+        return $this->pricingCurrency;
+    }
+
+    public function setPricingCurrency(?string $pricingCurrency): self
+    {
+        $this->pricingCurrency = $pricingCurrency;
+        return $this;
+    }
+
+    public static function builder(): AuthAmountBuilder
+    {
+        return new AuthAmountBuilder();
+    }
+}
+
+class AuthAmountBuilder
+{
+    private AuthAmount $authAmount;
+
+    public function __construct()
+    {
+        $this->authAmount = new AuthAmount();
+    }
+
+    public function orderAmount(?float $orderAmount): self
+    {
+        $this->authAmount->setOrderAmount($orderAmount);
+        return $this;
+    }
+
+    public function pricingCurrency(?string $pricingCurrency): self
+    {
+        $this->authAmount->setPricingCurrency($pricingCurrency);
+        return $this;
+    }
+
+    public function build(): AuthAmount
+    {
+        return $this->authAmount;
+    }
+}
+
+

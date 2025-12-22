@@ -1,0 +1,109 @@
+# Composer
+/vendor/
+composer.lock
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache/
+phpunit.xml.local
+phpunit.xml.bak
+
+# Test resources and sensitive data
+tests/bootstrap.php
+tests/resources/
+tests/config/
+tests/*.env
+tests/*.env.*
+tests/*.local.*
+tests/fixtures/
+tests/data/
+*.test.*
+*.test.local.*
+
+# IDE support files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Eclipse
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+.loadpath
+.externalToolBuilders/
+
+# NetBeans
+nbproject/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# PHPStorm
+.phpstorm.meta.php
+
+# Logs
+*.log
+*.log.*
+logs/
+*.log.*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# Build artifacts
+build/
+dist/
+out/
+target/
+
+# Environment files
+.env
+.env.*
+!.env.example
+*.local.*
+
+# Coverage reports
+coverage/
+*.coverage
+htmlcov/
+.nyc_output/
+
+# Cache files
+*.cache
+.cache/
+
+# Documentation (internal)
+DESIGN.md
