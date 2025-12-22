@@ -93,5 +93,3 @@ class SaleRequestBuilder
         return $this->saleRequest;
     }
 }
-
-

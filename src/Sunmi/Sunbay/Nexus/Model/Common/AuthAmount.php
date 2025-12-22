@@ -71,5 +71,3 @@ class AuthAmountBuilder
         return $this->authAmount;
     }
 }
-
-

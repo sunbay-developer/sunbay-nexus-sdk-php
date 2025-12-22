@@ -76,5 +76,3 @@ class PaymentMethodInfoBuilder
         return $this->paymentMethodInfo;
     }
 }
-
-

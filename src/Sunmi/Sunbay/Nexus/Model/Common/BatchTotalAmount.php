@@ -69,5 +69,3 @@ class BatchTotalAmountBuilder
         return $this->batchTotalAmount;
     }
 }
-
-

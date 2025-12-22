@@ -48,4 +48,3 @@ class SunbayNetworkException extends \Exception
     }
 }
 
-

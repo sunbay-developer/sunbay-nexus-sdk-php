@@ -142,5 +142,3 @@ class RefundAmountBuilder
         return $this->refundAmount;
     }
 }
-
-

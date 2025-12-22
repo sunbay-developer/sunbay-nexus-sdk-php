@@ -125,5 +125,3 @@ class PostAuthAmountBuilder
         return $this->postAuthAmount;
     }
 }
-
-

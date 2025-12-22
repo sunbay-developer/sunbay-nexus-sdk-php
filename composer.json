@@ -10,6 +10,11 @@
         "php"
     ],
     "license": "MIT",
+    "homepage": "https://github.com/sunbay-developer/sunbay-nexus-sdk-php",
+    "support": {
+        "issues": "https://github.com/sunbay-developer/sunbay-nexus-sdk-php/issues",
+        "source": "https://github.com/sunbay-developer/sunbay-nexus-sdk-php"
+    },
     "authors": [
         {
             "name": "Sunmi",
@@ -37,6 +42,12 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
     "scripts": {
         "test": "phpunit",
         "check": [

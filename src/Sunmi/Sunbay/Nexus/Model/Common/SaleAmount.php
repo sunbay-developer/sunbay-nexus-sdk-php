@@ -173,5 +173,3 @@ class SaleAmountBuilder
         return $this->saleAmount;
     }
 }
-
-
