@@ -2,7 +2,7 @@
 
 Official PHP SDK for Sunbay Nexus Payment Platform
 
-📦 **Package:** [packagist.org/packages/sunmi/sunbay-nexus-sdk-php](https://packagist.org/packages/sunmi/sunbay-nexus-sdk-php)
+**Current Version:** 1.0.0
 
 ## Features
 
@@ -16,7 +16,7 @@ Official PHP SDK for Sunbay Nexus Payment Platform
 
 ## Installation
 
-Please refer to [Packagist](https://packagist.org/packages/sunmi/sunbay-nexus-sdk-php) for the latest version.
+Please visit [https://packagist.org/packages/sunmi/sunbay-nexus-sdk-php](https://packagist.org/packages/sunmi/sunbay-nexus-sdk-php) to get the latest version.
 
 Add the following to your `composer.json`:
 
