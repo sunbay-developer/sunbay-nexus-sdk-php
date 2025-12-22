@@ -56,7 +56,6 @@ class JsonUtil
             
             // Get all properties (including private/protected)
             foreach ($reflection->getProperties() as $property) {
-                $property->setAccessible(true);
                 $value = $property->getValue($obj);
                 
                 // Skip null values (optional fields)
@@ -149,12 +148,10 @@ class JsonUtil
                 } elseif (property_exists($object, $key)) {
                     $reflection = new \ReflectionClass($object);
                     $property = $reflection->getProperty($key);
-                    $property->setAccessible(true);
                     $property->setValue($object, $value);
                 } elseif (property_exists($object, $camelKey)) {
                     $reflection = new \ReflectionClass($object);
                     $property = $reflection->getProperty($camelKey);
-                    $property->setAccessible(true);
                     $property->setValue($object, $value);
                 }
             }
