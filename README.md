@@ -2,7 +2,7 @@
 
 Official PHP SDK for Sunbay Nexus Payment Platform
 
-**Current Version:** 1.0.2
+**Current Version:** 1.0.3
 
 ## Features
 
