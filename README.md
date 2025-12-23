@@ -2,7 +2,7 @@
 
 Official PHP SDK for Sunbay Nexus Payment Platform
 
-**Current Version:** 1.0.3
+**Current Version:** 1.0.4
 
 ## Features
 
@@ -199,6 +199,42 @@ $client = NexusClient::builder()
     ->logger($logger)  // Optional: omit to disable logging
     ->build();
 ```
+
+## Enums
+
+The SDK provides type-safe enums for common payment-related values. These enums help prevent invalid values and provide better IDE support:
+
+### Available Enums
+
+- **`PaymentCategory`** - Payment method categories (CARD, CARD_CREDIT, CARD_DEBIT, QR_MPM, QR_CPM)
+- **`TransactionStatus`** - Transaction statuses (INITIAL, PROCESSING, SUCCESS, FAIL, CLOSED)
+- **`TransactionType`** - Transaction types (SALE, AUTH, FORCED_AUTH, INCREMENTAL, POST_AUTH, REFUND, VOID)
+- **`CardNetworkType`** - Card network types (CREDIT, DEBIT, EBT, EGC, UNKNOWN)
+- **`EntryMode`** - Card entry modes (MANUAL, SWIPE, FALLBACK_SWIPE, CONTACT, CONTACTLESS)
+- **`AuthenticationMethod`** - Authentication methods (NOT_AUTHENTICATED, PIN, OFFLINE_PIN, BY_PASS, SIGNATURE)
+
+### Usage Example
+
+```php
+use Sunmi\Sunbay\Nexus\Enum\PaymentCategory;
+use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
+
+// Use enum for type safety
+$paymentMethod = PaymentMethodInfo::builder()
+    ->category(PaymentCategory::CARD->value)  // Enum automatically converts to string
+    ->build();
+
+// Or use enum directly (recommended)
+$paymentMethod = PaymentMethodInfo::builder()
+    ->category(PaymentCategory::CARD->value)
+    ->build();
+
+// Enums work seamlessly with JSON serialization
+$json = json_encode(['category' => PaymentCategory::QR_MPM->value]);
+// Output: {"category":"QR-MPM"}
+```
+
+**Note:** While enums provide type safety, the SDK maintains backward compatibility with string values. You can continue using strings (e.g., `"CARD"`) or use enums for better type safety.
 
 ## Requirements
 
