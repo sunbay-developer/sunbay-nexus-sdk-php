@@ -20,6 +20,7 @@ use Sunmi\Sunbay\Nexus\Exception\SunbayNetworkException;
 use Sunmi\Sunbay\Nexus\Model\Common\BaseResponse;
 use Sunmi\Sunbay\Nexus\Util\IdGenerator;
 use Sunmi\Sunbay\Nexus\Util\JsonUtil;
+use Sunmi\Sunbay\Nexus\Util\UserAgentUtil;
 
 /**
  * HTTP client for Sunbay API
@@ -31,10 +32,12 @@ class HttpClient
 {
     private const HEADER_AUTHORIZATION = 'Authorization';
     private const HEADER_CONTENT_TYPE = 'Content-Type';
+    private const HEADER_USER_AGENT = 'User-Agent';
     private const HEADER_REQUEST_ID = 'X-Client-Request-Id';
     private const HEADER_TIMESTAMP = 'X-Timestamp';
     private const CONTENT_TYPE_JSON = 'application/json';
     private const RETRY_DELAY_BASE_MS = 1000;
+    private const MASKED_LENGTH = 6; // Length of visible characters before masking
 
     private string $apiKey;
     private string $baseUrl;
@@ -182,6 +185,7 @@ class HttpClient
     {
         $headers = [
             self::HEADER_AUTHORIZATION => ApiConstants::AUTHORIZATION_BEARER_PREFIX . $this->apiKey,
+            self::HEADER_USER_AGENT => UserAgentUtil::buildUserAgent(),
             self::HEADER_REQUEST_ID => IdGenerator::generateRequestId(),
             self::HEADER_TIMESTAMP => (string)(int)(microtime(true) * 1000),
         ];
@@ -247,10 +251,13 @@ class HttpClient
 
         // Log request
         if ($this->logger !== null) {
+            $headers = $this->maskSensitiveHeaders($request->getHeaders());
+            $headersStr = $this->formatHeaders($headers);
+            
             if ($requestBody !== null && $requestBody !== '') {
-                $this->logger->info("Request {$requestMethod} {$requestUrl} - Body: {$requestBody}");
+                $this->logger->info("Request {$requestMethod} {$requestUrl} - Headers: {$headersStr} - Body: {$requestBody}");
             } else {
-                $this->logger->info("Request {$requestMethod} {$requestUrl}");
+                $this->logger->info("Request {$requestMethod} {$requestUrl} - Headers: {$headersStr}");
             }
         }
 
@@ -407,6 +414,76 @@ class HttpClient
         }
 
         return $message;
+    }
+
+    /**
+     * Mask sensitive headers for logging
+     *
+     * @param array $headers original headers array
+     * @return array headers with sensitive information masked
+     */
+    private function maskSensitiveHeaders(array $headers): array
+    {
+        $maskedHeaders = [];
+        foreach ($headers as $name => $values) {
+            $headerName = strtolower($name);
+            if ($headerName === strtolower(self::HEADER_AUTHORIZATION)) {
+                // Mask Authorization header
+                $maskedValues = [];
+                foreach ($values as $value) {
+                    $maskedValues[] = $this->maskAuthorization($value);
+                }
+                $maskedHeaders[$name] = $maskedValues;
+            } else {
+                // Keep other headers as-is
+                $maskedHeaders[$name] = $values;
+            }
+        }
+        return $maskedHeaders;
+    }
+
+    /**
+     * Mask Authorization header value
+     * Example: "Bearer your_api_key_here" -> "Bearer your_***"
+     *
+     * @param string $authorization authorization header value
+     * @return string masked authorization value
+     */
+    private function maskAuthorization(string $authorization): string
+    {
+        // Check if it's a Bearer token
+        if (stripos($authorization, 'Bearer ') === 0) {
+            $prefix = 'Bearer ';
+            $token = substr($authorization, strlen($prefix));
+            if (strlen($token) > self::MASKED_LENGTH) {
+                $visible = substr($token, 0, self::MASKED_LENGTH);
+                return $prefix . $visible . '***';
+            }
+            return $prefix . '***';
+        }
+        
+        // For other authorization types, mask the entire value except first few characters
+        if (strlen($authorization) > self::MASKED_LENGTH) {
+            return substr($authorization, 0, self::MASKED_LENGTH) . '***';
+        }
+        return '***';
+    }
+
+    /**
+     * Format headers array to JSON string for logging
+     *
+     * @param array $headers headers array
+     * @return string formatted headers JSON string
+     */
+    private function formatHeaders(array $headers): string
+    {
+        $formatted = [];
+        foreach ($headers as $name => $values) {
+            // PSR-7 headers are arrays, convert to single value or keep as array
+            $value = is_array($values) && count($values) === 1 ? $values[0] : $values;
+            $formatted[$name] = $value;
+        }
+        return json_encode($formatted, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /**
