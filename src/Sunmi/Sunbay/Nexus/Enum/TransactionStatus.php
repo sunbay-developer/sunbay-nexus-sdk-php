@@ -6,6 +6,8 @@ namespace Sunmi\Sunbay\Nexus\Enum;
 
 /**
  * Transaction status enum
+ * 
+ * Interface returns code (single character), desc is for display only
  *
  * @author Andy Li
  * @since 2025-01-20
@@ -13,54 +15,28 @@ namespace Sunmi\Sunbay\Nexus\Enum;
 enum TransactionStatus: string
 {
     /**
-     * Initial state
+     * Initial state (code: I, desc: INITIAL)
      */
-    case INITIAL = 'INITIAL';
+    case INITIAL = 'I';
 
     /**
-     * Transaction processing. Channel called but no result obtained, or unexpected exception returned.
+     * Transaction processing. Channel called but no result obtained, or unexpected exception returned. (code: P, desc: PROCESSING)
      */
-    case PROCESSING = 'PROCESSING';
+    case PROCESSING = 'P';
 
     /**
-     * Transaction successful
+     * Transaction successful (code: S, desc: SUCCESS)
      */
-    case SUCCESS = 'SUCCESS';
+    case SUCCESS = 'S';
 
     /**
-     * Transaction failed
+     * Transaction failed (code: F, desc: FAIL)
      */
-    case FAIL = 'FAIL';
+    case FAIL = 'F';
 
     /**
-     * Transaction closed
+     * Transaction closed (code: C, desc: CLOSED)
      */
-    case CLOSED = 'CLOSED';
-
-    /**
-     * Get status code (single character)
-     *
-     * @return string
-     */
-    public function getCode(): string
-    {
-        return match ($this) {
-            self::INITIAL => 'I',
-            self::PROCESSING => 'P',
-            self::SUCCESS => 'S',
-            self::FAIL => 'F',
-            self::CLOSED => 'C',
-        };
-    }
-
-    /**
-     * Get status description
-     *
-     * @return string
-     */
-    public function getDesc(): string
-    {
-        return $this->value;
-    }
+    case CLOSED = 'C';
 }
 

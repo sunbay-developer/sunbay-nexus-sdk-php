@@ -139,19 +139,23 @@ class JsonUtil
 
             $method = 'set' . ucfirst(self::camelCase($key));
             if (method_exists($object, $method)) {
+                $value = self::convertValueType($object, $method, $value);
                 $object->$method($value);
             } else {
                 $camelKey = self::camelCase($key);
                 $method = 'set' . ucfirst($camelKey);
                 if (method_exists($object, $method)) {
+                    $value = self::convertValueType($object, $method, $value);
                     $object->$method($value);
                 } elseif (property_exists($object, $key)) {
                     $reflection = new \ReflectionClass($object);
                     $property = $reflection->getProperty($key);
+                    $value = self::convertValueTypeByProperty($property, $value);
                     $property->setValue($object, $value);
                 } elseif (property_exists($object, $camelKey)) {
                     $reflection = new \ReflectionClass($object);
                     $property = $reflection->getProperty($camelKey);
+                    $value = self::convertValueTypeByProperty($property, $value);
                     $property->setValue($object, $value);
                 }
             }
@@ -194,6 +198,74 @@ class JsonUtil
     private static function snakeCase(string $str): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $str));
+    }
+
+    /**
+     * Convert value type based on setter method parameter type
+     *
+     * @param object $object object instance
+     * @param string $methodName setter method name
+     * @param mixed $value value to convert
+     * @return mixed converted value
+     */
+    private static function convertValueType($object, string $methodName, $value)
+    {
+        if (!is_string($value) || !method_exists($object, $methodName)) {
+            return $value;
+        }
+
+        try {
+            $reflection = new \ReflectionClass($object);
+            $method = $reflection->getMethod($methodName);
+            $parameters = $method->getParameters();
+            
+            if (empty($parameters)) {
+                return $value;
+            }
+
+            $parameter = $parameters[0];
+            $type = $parameter->getType();
+
+            if ($type instanceof \ReflectionNamedType && $type->isBuiltin()) {
+                $typeName = $type->getName();
+                
+                // Convert string to float/int if needed
+                if (($typeName === 'float' || $typeName === 'int') && is_numeric($value)) {
+                    return $typeName === 'float' ? (float)$value : (int)$value;
+                }
+            }
+        } catch (\ReflectionException $e) {
+            // If reflection fails, return original value
+        }
+
+        return $value;
+    }
+
+    /**
+     * Convert value type based on property type
+     *
+     * @param \ReflectionProperty $property property reflection
+     * @param mixed $value value to convert
+     * @return mixed converted value
+     */
+    private static function convertValueTypeByProperty(\ReflectionProperty $property, $value)
+    {
+        if (!is_string($value)) {
+            return $value;
+        }
+
+        $type = $property->getType();
+        
+        if ($type instanceof \ReflectionNamedType && $type->isBuiltin()) {
+            $typeName = $type->getName();
+            
+            // Convert string to float/int if needed
+            if (($typeName === 'float' || $typeName === 'int') && is_numeric($value)) {
+                return $typeName === 'float' ? (float)$value : (int)$value;
+            }
+        }
+
+        return $value;
     }
 }
 

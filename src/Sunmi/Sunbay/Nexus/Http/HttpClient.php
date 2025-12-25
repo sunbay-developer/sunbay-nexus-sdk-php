@@ -281,7 +281,8 @@ class HttpClient
                     throw new SunbayNetworkException('Failed to parse response body', false);
                 }
 
-                if (!$result->isSuccess()) {
+                // If code is not success (0), throw business exception
+                if ($result->getCode() !== ApiConstants::RESPONSE_SUCCESS_CODE) {
                     // Log API error
                     if ($this->logger !== null) {
                         $this->logger->error(
@@ -486,13 +487,5 @@ class HttpClient
         return json_encode($formatted, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
-    /**
-     * Close HTTP client and release resources
-     */
-    public function close(): void
-    {
-        // Guzzle client doesn't need explicit close in PHP
-        // Connection pool is managed automatically
-    }
 }
 

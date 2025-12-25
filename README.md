@@ -2,7 +2,7 @@
 
 Official PHP SDK for Sunbay Nexus Payment Platform
 
-**Current Version:** 1.0.5
+**Current Version:** 1.0.6
 
 ## Features
 
@@ -88,11 +88,9 @@ $request = SaleRequest::builder()
 // Execute transaction
 try {
     $response = $client->sale($request);
-    if ($response->isSuccess()) {
-        echo "Transaction ID: " . $response->getTransactionId() . "\n";
-    } else {
-        echo "Error: " . $response->getMsg() . "\n";
-    }
+    // If we reach here, the transaction was successful (code = "0")
+    // Business exceptions are automatically thrown for non-zero codes
+    echo "Transaction ID: " . $response->getTransactionId() . "\n";
 } catch (SunbayNetworkException $e) {
     echo "Network Error: " . $e->getMessage() . "\n";
 } catch (SunbayBusinessException $e) {
@@ -128,10 +126,12 @@ All request classes support Builder pattern for easy construction.
 
 All response objects extend `BaseResponse` and provide the following common methods:
 
-- `isSuccess()` - Check if the response is successful (code is "0")
+- `isSuccess()` - Check if the response is successful (code is "0"). Note: If code is not "0", a `SunbayBusinessException` will be thrown automatically, so you typically don't need to check this manually.
 - `getCode()` - Get response code
 - `getMsg()` - Get response message
 - `getTraceId()` - Get trace ID for troubleshooting
+
+**Important:** The SDK automatically throws `SunbayBusinessException` when the API returns a non-zero code. If your code reaches the response handling without catching an exception, the response is guaranteed to be successful (code = "0").
 
 Transaction responses (e.g., `SaleResponse`, `AuthResponse`) also provide:
 - `getTransactionId()` - Get transaction ID
@@ -207,7 +207,7 @@ The SDK provides type-safe enums for common payment-related values. These enums 
 ### Available Enums
 
 - **`PaymentCategory`** - Payment method categories (CARD, CARD_CREDIT, CARD_DEBIT, QR_MPM, QR_CPM)
-- **`TransactionStatus`** - Transaction statuses (INITIAL, PROCESSING, SUCCESS, FAIL, CLOSED)
+- **`TransactionStatus`** - Transaction status codes returned by API (I=INITIAL, P=PROCESSING, S=SUCCESS, F=FAIL, C=CLOSED)
 - **`TransactionType`** - Transaction types (SALE, AUTH, FORCED_AUTH, INCREMENTAL, POST_AUTH, REFUND, VOID)
 - **`CardNetworkType`** - Card network types (CREDIT, DEBIT, EBT, EGC, UNKNOWN)
 - **`EntryMode`** - Card entry modes (MANUAL, SWIPE, FALLBACK_SWIPE, CONTACT, CONTACTLESS)
@@ -217,24 +217,34 @@ The SDK provides type-safe enums for common payment-related values. These enums 
 
 ```php
 use Sunmi\Sunbay\Nexus\Enum\PaymentCategory;
+use Sunmi\Sunbay\Nexus\Enum\TransactionStatus;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
+use Sunmi\Sunbay\Nexus\Model\Response\QueryResponse;
 
-// Use enum for type safety
+// Use enum for type safety when building requests
 $paymentMethod = PaymentMethodInfo::builder()
     ->category(PaymentCategory::CARD->value)  // Enum automatically converts to string
     ->build();
 
-// Or use enum directly (recommended)
-$paymentMethod = PaymentMethodInfo::builder()
-    ->category(PaymentCategory::CARD->value)
-    ->build();
+// When reading responses, validate enum values
+$queryResponse = $client->query($request);
+if ($queryResponse->getTransactionStatus() !== null) {
+    $statusCode = $queryResponse->getTransactionStatus();
+    // Validate against enum (API returns code like "I", "P", "S", "F", "C")
+    $validStatuses = array_map(fn($case) => $case->value, TransactionStatus::cases());
+    if (in_array($statusCode, $validStatuses)) {
+        // Status is valid
+    }
+}
 
 // Enums work seamlessly with JSON serialization
 $json = json_encode(['category' => PaymentCategory::QR_MPM->value]);
 // Output: {"category":"QR-MPM"}
 ```
 
-**Note:** While enums provide type safety, the SDK maintains backward compatibility with string values. You can continue using strings (e.g., `"CARD"`) or use enums for better type safety.
+**Note:** 
+- While enums provide type safety, the SDK maintains backward compatibility with string values. You can continue using strings (e.g., `"CARD"`) or use enums for better type safety.
+- For `TransactionStatus`, the API returns single-character codes (I, P, S, F, C) rather than full names. The enum values match these codes.
 
 ## Requirements
 

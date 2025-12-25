@@ -184,13 +184,6 @@ class NexusClient
         return $this->httpClient->post(ApiConstants::PATH_BATCH_CLOSE, $request, BatchCloseResponse::class);
     }
 
-    /**
-     * Close client and release resources
-     */
-    public function close(): void
-    {
-        $this->httpClient->close();
-    }
 
     /**
      * Builder for NexusClient
