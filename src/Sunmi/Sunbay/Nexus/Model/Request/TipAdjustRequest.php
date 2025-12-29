@@ -6,6 +6,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
 
 /**
  * Tip adjust request
+ * Tip amount is in cents (e.g., 500 = $5.00)
  *
  * @author Andy Li
  * @since 2025-12-19
@@ -17,7 +18,7 @@ class TipAdjustRequest
     private ?string $terminalSn = null;
     private ?string $originalTransactionId = null;
     private ?string $originalTransactionRequestId = null;
-    private ?float $tipAmount = null;
+    private ?int $tipAmount = null;
     private ?string $attach = null;
 
     // Getters and setters
@@ -36,8 +37,8 @@ class TipAdjustRequest
     public function getOriginalTransactionRequestId(): ?string { return $this->originalTransactionRequestId; }
     public function setOriginalTransactionRequestId(?string $originalTransactionRequestId): self { $this->originalTransactionRequestId = $originalTransactionRequestId; return $this; }
 
-    public function getTipAmount(): ?float { return $this->tipAmount; }
-    public function setTipAmount(?float $tipAmount): self { $this->tipAmount = $tipAmount; return $this; }
+    public function getTipAmount(): ?int { return $this->tipAmount; }
+    public function setTipAmount(?int $tipAmount): self { $this->tipAmount = $tipAmount; return $this; }
 
     public function getAttach(): ?string { return $this->attach; }
     public function setAttach(?string $attach): self { $this->attach = $attach; return $this; }
@@ -62,7 +63,7 @@ class TipAdjustRequestBuilder
     public function terminalSn(?string $terminalSn): self { $this->tipAdjustRequest->setTerminalSn($terminalSn); return $this; }
     public function originalTransactionId(?string $originalTransactionId): self { $this->tipAdjustRequest->setOriginalTransactionId($originalTransactionId); return $this; }
     public function originalTransactionRequestId(?string $originalTransactionRequestId): self { $this->tipAdjustRequest->setOriginalTransactionRequestId($originalTransactionRequestId); return $this; }
-    public function tipAmount(?float $tipAmount): self { $this->tipAdjustRequest->setTipAmount($tipAmount); return $this; }
+    public function tipAmount(?int $tipAmount): self { $this->tipAdjustRequest->setTipAmount($tipAmount); return $this; }
     public function attach(?string $attach): self { $this->tipAdjustRequest->setAttach($attach); return $this; }
 
     public function build(): TipAdjustRequest

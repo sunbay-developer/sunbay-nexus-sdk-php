@@ -8,21 +8,22 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  * Authorization amount information
  * Supports: orderAmount, pricingCurrency only
  * Used for: Auth, ForcedAuth, IncrementalAuth
+ * Amount is in cents (e.g., 10000 = $100.00)
  *
  * @author Andy Li
  * @since 2025-12-19
  */
 class AuthAmount
 {
-    private ?float $orderAmount = null;
+    private ?int $orderAmount = null;
     private ?string $pricingCurrency = null;
 
-    public function getOrderAmount(): ?float
+    public function getOrderAmount(): ?int
     {
         return $this->orderAmount;
     }
 
-    public function setOrderAmount(?float $orderAmount): self
+    public function setOrderAmount(?int $orderAmount): self
     {
         $this->orderAmount = $orderAmount;
         return $this;
@@ -54,7 +55,7 @@ class AuthAmountBuilder
         $this->authAmount = new AuthAmount();
     }
 
-    public function orderAmount(?float $orderAmount): self
+    public function orderAmount(?int $orderAmount): self
     {
         $this->authAmount->setOrderAmount($orderAmount);
         return $this;

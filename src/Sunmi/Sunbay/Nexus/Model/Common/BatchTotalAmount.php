@@ -6,6 +6,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
 
 /**
  * Batch total amount information
+ * Amount is in cents (e.g., 10000 = $100.00)
  *
  * @author Andy Li
  * @since 2025-12-19
@@ -13,7 +14,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
 class BatchTotalAmount
 {
     private ?string $priceCurrency = null;
-    private ?float $amount = null;
+    private ?int $amount = null;
 
     public function getPriceCurrency(): ?string
     {
@@ -26,12 +27,12 @@ class BatchTotalAmount
         return $this;
     }
 
-    public function getAmount(): ?float
+    public function getAmount(): ?int
     {
         return $this->amount;
     }
 
-    public function setAmount(?float $amount): self
+    public function setAmount(?int $amount): self
     {
         $this->amount = $amount;
         return $this;
@@ -58,7 +59,7 @@ class BatchTotalAmountBuilder
         return $this;
     }
 
-    public function amount(?float $amount): self
+    public function amount(?int $amount): self
     {
         $this->batchTotalAmount->setAmount($amount);
         return $this;

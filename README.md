@@ -69,8 +69,9 @@ use Sunmi\Sunbay\Nexus\Model\Response\SaleResponse;
 // $client = ... (from step 1)
 
 // Build amount using Builder pattern
+// Amount is in cents (e.g., 10000 = $100.00)
 $amount = SaleAmount::builder()
-    ->orderAmount(100.00)
+    ->orderAmount(10000)
     ->pricingCurrency('USD')
     ->build();
 
