@@ -6,7 +6,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
 
 /**
  * Authorization amount information
- * Supports: orderAmount, pricingCurrency only
+ * Supports: orderAmount, priceCurrency only
  * Used for: Auth, ForcedAuth, IncrementalAuth
  * Amount is in cents (e.g., 10000 = $100.00)
  *
@@ -16,7 +16,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
 class AuthAmount
 {
     private ?int $orderAmount = null;
-    private ?string $pricingCurrency = null;
+    private ?string $priceCurrency = null;
 
     public function getOrderAmount(): ?int
     {
@@ -29,14 +29,14 @@ class AuthAmount
         return $this;
     }
 
-    public function getPricingCurrency(): ?string
+    public function getPriceCurrency(): ?string
     {
-        return $this->pricingCurrency;
+        return $this->priceCurrency;
     }
 
-    public function setPricingCurrency(?string $pricingCurrency): self
+    public function setPriceCurrency(?string $priceCurrency): self
     {
-        $this->pricingCurrency = $pricingCurrency;
+        $this->priceCurrency = $priceCurrency;
         return $this;
     }
 
@@ -61,9 +61,9 @@ class AuthAmountBuilder
         return $this;
     }
 
-    public function pricingCurrency(?string $pricingCurrency): self
+    public function priceCurrency(?string $priceCurrency): self
     {
-        $this->authAmount->setPricingCurrency($pricingCurrency);
+        $this->authAmount->setPriceCurrency($priceCurrency);
         return $this;
     }
 

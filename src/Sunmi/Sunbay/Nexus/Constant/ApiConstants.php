@@ -80,9 +80,10 @@ class ApiConstants
     public const PATH_QUERY = self::COMMON_PREFIX . '/transaction/query';
 
     /**
-     * Semi-integration settlement API paths
+     * Settlement API paths
      */
-    public const PATH_BATCH_CLOSE = self::SEMI_INTEGRATION_PREFIX . '/settlement/batch-close';
+    public const PATH_BATCH_QUERY = self::COMMON_PREFIX . '/settlement/batch-query';
+    public const PATH_BATCH_CLOSE = self::COMMON_PREFIX . '/settlement/batch-close';
 
     private function __construct()
     {

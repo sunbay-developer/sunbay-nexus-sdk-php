@@ -10,6 +10,7 @@ use Sunmi\Sunbay\Nexus\Http\HttpClient;
 use Sunmi\Sunbay\Nexus\Model\Request\AbortRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\AuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\BatchCloseRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\BatchQueryRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\ForcedAuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\IncrementalAuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\PostAuthRequest;
@@ -21,6 +22,7 @@ use Sunmi\Sunbay\Nexus\Model\Request\VoidRequest;
 use Sunmi\Sunbay\Nexus\Model\Response\AbortResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\AuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\BatchCloseResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\BatchQueryResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\ForcedAuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\IncrementalAuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\PostAuthResponse;
@@ -174,7 +176,34 @@ class NexusClient
     }
 
     /**
+     * Batch query
+     * <p>
+     * Query batch summary data, returns statistics grouped by channel code and
+     * price currency.
+     * </p>
+     *
+     * @param BatchQueryRequest $request batch query request
+     * @return BatchQueryResponse batch query response
+     */
+    public function batchQuery(BatchQueryRequest $request): BatchQueryResponse
+    {
+        if ($request === null) {
+            throw new SunbayBusinessException(
+                ApiConstants::ERROR_CODE_PARAMETER_ERROR,
+                'BatchQueryRequest cannot be null',
+                null
+            );
+        }
+        return $this->httpClient->post(ApiConstants::PATH_BATCH_QUERY, $request, BatchQueryResponse::class);
+    }
+
+    /**
      * Batch close
+     * <p>
+     * Close the current transaction batch and trigger settlement process. After
+     * batch close,
+     * all transactions in the batch will enter the settlement process.
+     * </p>
      *
      * @param BatchCloseRequest $request batch close request
      * @return BatchCloseResponse batch close response

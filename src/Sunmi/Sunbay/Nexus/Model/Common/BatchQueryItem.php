@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Sunmi\Sunbay\Nexus\Model\Response;
-
-use Sunmi\Sunbay\Nexus\Model\Common\BaseResponse;
+namespace Sunmi\Sunbay\Nexus\Model\Common;
 
 /**
- * Batch close response
+ * Batch query item information
+ * <p>
+ * Statistics grouped by channel code and price currency
+ * </p>
  *
  * @author Andy Li
- * @since 2025-12-19
+ * @since 2025-12-26
  */
-class BatchCloseResponse extends BaseResponse
+class BatchQueryItem
 {
     private ?string $batchNo = null;
-    private ?string $terminalSn = null;
-    private ?string $batchTime = null;
-    private ?int $transactionCount = null;
+    private ?string $startTime = null;
+    private ?string $channelCode = null;
     private ?string $priceCurrency = null;
+    private ?int $totalCount = null;
     private ?int $netAmount = null;
     private ?int $tipAmount = null;
     private ?int $surchargeAmount = null;
@@ -27,17 +28,17 @@ class BatchCloseResponse extends BaseResponse
     public function getBatchNo(): ?string { return $this->batchNo; }
     public function setBatchNo(?string $batchNo): self { $this->batchNo = $batchNo; return $this; }
 
-    public function getTerminalSn(): ?string { return $this->terminalSn; }
-    public function setTerminalSn(?string $terminalSn): self { $this->terminalSn = $terminalSn; return $this; }
+    public function getStartTime(): ?string { return $this->startTime; }
+    public function setStartTime(?string $startTime): self { $this->startTime = $startTime; return $this; }
 
-    public function getBatchTime(): ?string { return $this->batchTime; }
-    public function setBatchTime(?string $batchTime): self { $this->batchTime = $batchTime; return $this; }
-
-    public function getTransactionCount(): ?int { return $this->transactionCount; }
-    public function setTransactionCount(?int $transactionCount): self { $this->transactionCount = $transactionCount; return $this; }
+    public function getChannelCode(): ?string { return $this->channelCode; }
+    public function setChannelCode(?string $channelCode): self { $this->channelCode = $channelCode; return $this; }
 
     public function getPriceCurrency(): ?string { return $this->priceCurrency; }
     public function setPriceCurrency(?string $priceCurrency): self { $this->priceCurrency = $priceCurrency; return $this; }
+
+    public function getTotalCount(): ?int { return $this->totalCount; }
+    public function setTotalCount(?int $totalCount): self { $this->totalCount = $totalCount; return $this; }
 
     public function getNetAmount(): ?int { return $this->netAmount; }
     public function setNetAmount(?int $netAmount): self { $this->netAmount = $netAmount; return $this; }

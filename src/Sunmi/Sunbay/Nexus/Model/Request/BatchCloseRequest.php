@@ -16,8 +16,8 @@ class BatchCloseRequest
     private ?string $merchantId = null;
     private ?string $transactionRequestId = null;
     private ?string $terminalSn = null;
+    private ?string $channelCode = null;
     private ?string $description = null;
-    private ?string $attach = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -32,11 +32,11 @@ class BatchCloseRequest
     public function getTerminalSn(): ?string { return $this->terminalSn; }
     public function setTerminalSn(?string $terminalSn): self { $this->terminalSn = $terminalSn; return $this; }
 
+    public function getChannelCode(): ?string { return $this->channelCode; }
+    public function setChannelCode(?string $channelCode): self { $this->channelCode = $channelCode; return $this; }
+
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self { $this->description = $description; return $this; }
-
-    public function getAttach(): ?string { return $this->attach; }
-    public function setAttach(?string $attach): self { $this->attach = $attach; return $this; }
 
     public static function builder(): BatchCloseRequestBuilder
     {
@@ -57,8 +57,8 @@ class BatchCloseRequestBuilder
     public function merchantId(?string $merchantId): self { $this->batchCloseRequest->setMerchantId($merchantId); return $this; }
     public function transactionRequestId(?string $transactionRequestId): self { $this->batchCloseRequest->setTransactionRequestId($transactionRequestId); return $this; }
     public function terminalSn(?string $terminalSn): self { $this->batchCloseRequest->setTerminalSn($terminalSn); return $this; }
+    public function channelCode(?string $channelCode): self { $this->batchCloseRequest->setChannelCode($channelCode); return $this; }
     public function description(?string $description): self { $this->batchCloseRequest->setDescription($description); return $this; }
-    public function attach(?string $attach): self { $this->batchCloseRequest->setAttach($attach); return $this; }
 
     public function build(): BatchCloseRequest
     {

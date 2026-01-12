@@ -40,9 +40,9 @@ class SaleAmount
     private ?int $cashbackAmount = null;
 
     /**
-     * Pricing currency (ISO 4217, required)
+     * Price currency (ISO 4217, required)
      */
-    private ?string $pricingCurrency = null;
+    private ?string $priceCurrency = null;
 
     public function getOrderAmount(): ?int
     {
@@ -99,14 +99,14 @@ class SaleAmount
         return $this;
     }
 
-    public function getPricingCurrency(): ?string
+    public function getPriceCurrency(): ?string
     {
-        return $this->pricingCurrency;
+        return $this->priceCurrency;
     }
 
-    public function setPricingCurrency(?string $pricingCurrency): self
+    public function setPriceCurrency(?string $priceCurrency): self
     {
-        $this->pricingCurrency = $pricingCurrency;
+        $this->priceCurrency = $priceCurrency;
         return $this;
     }
 
@@ -163,9 +163,9 @@ class SaleAmountBuilder
         return $this;
     }
 
-    public function pricingCurrency(?string $pricingCurrency): self
+    public function priceCurrency(?string $priceCurrency): self
     {
-        $this->saleAmount->setPricingCurrency($pricingCurrency);
+        $this->saleAmount->setPriceCurrency($priceCurrency);
         return $this;
     }
 

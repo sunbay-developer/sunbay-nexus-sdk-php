@@ -19,7 +19,7 @@ class RefundAmount
     private ?int $taxAmount = null;
     private ?int $surchargeAmount = null;
     private ?int $cashbackAmount = null;
-    private ?string $pricingCurrency = null;
+    private ?string $priceCurrency = null;
 
     public function getOrderAmount(): ?int
     {
@@ -76,14 +76,14 @@ class RefundAmount
         return $this;
     }
 
-    public function getPricingCurrency(): ?string
+    public function getPriceCurrency(): ?string
     {
-        return $this->pricingCurrency;
+        return $this->priceCurrency;
     }
 
-    public function setPricingCurrency(?string $pricingCurrency): self
+    public function setPriceCurrency(?string $priceCurrency): self
     {
-        $this->pricingCurrency = $pricingCurrency;
+        $this->priceCurrency = $priceCurrency;
         return $this;
     }
 
@@ -132,9 +132,9 @@ class RefundAmountBuilder
         return $this;
     }
 
-    public function pricingCurrency(?string $pricingCurrency): self
+    public function priceCurrency(?string $priceCurrency): self
     {
-        $this->refundAmount->setPricingCurrency($pricingCurrency);
+        $this->refundAmount->setPriceCurrency($priceCurrency);
         return $this;
     }
 

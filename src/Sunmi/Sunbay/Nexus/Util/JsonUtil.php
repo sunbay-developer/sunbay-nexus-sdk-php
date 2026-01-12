@@ -111,8 +111,66 @@ class JsonUtil
         // Convert array to object
         $object = new $className();
         foreach ($data as $key => $value) {
-            // Handle nested objects
-            if (is_array($value) && !empty($value) && !self::isList($value)) {
+            // Handle array of objects (list)
+            if (is_array($value) && !empty($value) && self::isList($value)) {
+                // Try to determine the array item class name from property type hints
+                $reflection = new \ReflectionClass($object);
+                $property = null;
+                try {
+                    $property = $reflection->getProperty($key);
+                } catch (\ReflectionException $e) {
+                    // Property doesn't exist, try camelCase
+                    $camelKey = self::camelCase($key);
+                    try {
+                        $property = $reflection->getProperty($camelKey);
+                    } catch (\ReflectionException $e2) {
+                        // Property still doesn't exist
+                    }
+                }
+
+                if ($property !== null) {
+                    $type = $property->getType();
+                    // Check if property is array type
+                    if ($type instanceof \ReflectionNamedType && $type->getName() === 'array') {
+                        // Try to get doc comment to find array item type
+                        $docComment = $property->getDocComment();
+                        if ($docComment && preg_match('/@var\s+([^\s\[\]|]+)\[\]/', $docComment, $matches)) {
+                            $itemClassName = $matches[1];
+                            // Check if it's a fully qualified class name or needs namespace resolution
+                            if (strpos($itemClassName, '\\') === false) {
+                                // Try to resolve from use statements or same namespace
+                                $namespace = $reflection->getNamespaceName();
+                                // Check if class exists in current namespace
+                                $fullClassName = $namespace . '\\' . $itemClassName;
+                                if (class_exists($fullClassName)) {
+                                    $itemClassName = $fullClassName;
+                                } else {
+                                    // Try to find in use statements
+                                    $fileContent = file_get_contents($reflection->getFileName());
+                                    if (preg_match('/use\s+([^;]+)\s+' . preg_quote($itemClassName, '/') . '\s*;/', $fileContent, $useMatches)) {
+                                        $itemClassName = trim($useMatches[1]);
+                                    } else {
+                                        // Fallback to same namespace
+                                        $itemClassName = $fullClassName;
+                                    }
+                                }
+                            }
+                            // Convert each array item
+                            $convertedArray = [];
+                            foreach ($value as $item) {
+                                if (is_array($item)) {
+                                    $convertedArray[] = self::fromJson(json_encode($item), $itemClassName);
+                                } else {
+                                    $convertedArray[] = $item;
+                                }
+                            }
+                            $value = $convertedArray;
+                        }
+                    }
+                }
+            }
+            // Handle nested objects (associative array)
+            elseif (is_array($value) && !empty($value) && !self::isList($value)) {
                 // Try to determine the nested class name from property type hints
                 $reflection = new \ReflectionClass($object);
                 $property = null;

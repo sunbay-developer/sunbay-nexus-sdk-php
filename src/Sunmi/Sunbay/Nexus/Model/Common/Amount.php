@@ -20,7 +20,6 @@ class Amount
     private ?int $surchargeAmount = null;
     private ?int $tipAmount = null;
     private ?int $cashbackAmount = null;
-    private ?string $pricingCurrency = null;
 
     public function getPriceCurrency(): ?string
     {
@@ -96,17 +95,6 @@ class Amount
     public function setCashbackAmount(?int $cashbackAmount): self
     {
         $this->cashbackAmount = $cashbackAmount;
-        return $this;
-    }
-
-    public function getPricingCurrency(): ?string
-    {
-        return $this->pricingCurrency;
-    }
-
-    public function setPricingCurrency(?string $pricingCurrency): self
-    {
-        $this->pricingCurrency = $pricingCurrency;
         return $this;
     }
 }
