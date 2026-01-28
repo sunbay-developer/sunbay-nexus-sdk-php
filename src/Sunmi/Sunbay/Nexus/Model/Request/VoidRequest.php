@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Request;
 
+use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
+
 /**
  * Void request
  *
@@ -21,6 +23,8 @@ class VoidRequest
     private ?string $terminalSn = null;
     private ?string $attach = null;
     private ?string $notifyUrl = null;
+    /** Receipt print option. NONE/MERCHANT/CUSTOMER/BOTH. Default: NONE */
+    private ?PrintReceiptOption $printReceipt = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -50,6 +54,9 @@ class VoidRequest
     public function getNotifyUrl(): ?string { return $this->notifyUrl; }
     public function setNotifyUrl(?string $notifyUrl): self { $this->notifyUrl = $notifyUrl; return $this; }
 
+    public function getPrintReceipt(): ?PrintReceiptOption { return $this->printReceipt; }
+    public function setPrintReceipt(?PrintReceiptOption $printReceipt): self { $this->printReceipt = $printReceipt; return $this; }
+
     public static function builder(): VoidRequestBuilder
     {
         return new VoidRequestBuilder();
@@ -74,6 +81,7 @@ class VoidRequestBuilder
     public function terminalSn(?string $terminalSn): self { $this->voidRequest->setTerminalSn($terminalSn); return $this; }
     public function attach(?string $attach): self { $this->voidRequest->setAttach($attach); return $this; }
     public function notifyUrl(?string $notifyUrl): self { $this->voidRequest->setNotifyUrl($notifyUrl); return $this; }
+    public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->voidRequest->setPrintReceipt($printReceipt); return $this; }
 
     public function build(): VoidRequest
     {

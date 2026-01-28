@@ -51,6 +51,12 @@ class JsonUtil
     private static function objectToArray($obj)
     {
         if (is_object($obj)) {
+            if ($obj instanceof \BackedEnum) {
+                return $obj->value;
+            }
+            if ($obj instanceof \UnitEnum) {
+                return $obj->name;
+            }
             $result = [];
             $reflection = new \ReflectionClass($obj);
             

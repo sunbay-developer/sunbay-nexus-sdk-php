@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Request;
 
+use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
 use Sunmi\Sunbay\Nexus\Model\Common\SaleAmount;
 
@@ -26,6 +27,8 @@ class SaleRequest
     private ?string $attach = null;
     private ?string $notifyUrl = null;
     private ?string $timeExpire = null;
+    /** Receipt print option. NONE/MERCHANT/CUSTOMER/BOTH. Default: NONE */
+    private ?PrintReceiptOption $printReceipt = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -61,6 +64,9 @@ class SaleRequest
     public function getTimeExpire(): ?string { return $this->timeExpire; }
     public function setTimeExpire(?string $timeExpire): self { $this->timeExpire = $timeExpire; return $this; }
 
+    public function getPrintReceipt(): ?PrintReceiptOption { return $this->printReceipt; }
+    public function setPrintReceipt(?PrintReceiptOption $printReceipt): self { $this->printReceipt = $printReceipt; return $this; }
+
     public static function builder(): SaleRequestBuilder
     {
         return new SaleRequestBuilder();
@@ -87,6 +93,7 @@ class SaleRequestBuilder
     public function attach(?string $attach): self { $this->saleRequest->setAttach($attach); return $this; }
     public function notifyUrl(?string $notifyUrl): self { $this->saleRequest->setNotifyUrl($notifyUrl); return $this; }
     public function timeExpire(?string $timeExpire): self { $this->saleRequest->setTimeExpire($timeExpire); return $this; }
+    public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->saleRequest->setPrintReceipt($printReceipt); return $this; }
 
     public function build(): SaleRequest
     {

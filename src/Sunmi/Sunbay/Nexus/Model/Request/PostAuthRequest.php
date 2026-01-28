@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Request;
 
+use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
 use Sunmi\Sunbay\Nexus\Model\Common\PostAuthAmount;
 
 /**
@@ -24,6 +25,8 @@ class PostAuthRequest
     private ?string $terminalSn = null;
     private ?string $attach = null;
     private ?string $notifyUrl = null;
+    /** Receipt print option. NONE/MERCHANT/CUSTOMER/BOTH. Default: NONE */
+    private ?PrintReceiptOption $printReceipt = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -56,6 +59,9 @@ class PostAuthRequest
     public function getNotifyUrl(): ?string { return $this->notifyUrl; }
     public function setNotifyUrl(?string $notifyUrl): self { $this->notifyUrl = $notifyUrl; return $this; }
 
+    public function getPrintReceipt(): ?PrintReceiptOption { return $this->printReceipt; }
+    public function setPrintReceipt(?PrintReceiptOption $printReceipt): self { $this->printReceipt = $printReceipt; return $this; }
+
     public static function builder(): PostAuthRequestBuilder
     {
         return new PostAuthRequestBuilder();
@@ -81,6 +87,7 @@ class PostAuthRequestBuilder
     public function terminalSn(?string $terminalSn): self { $this->postAuthRequest->setTerminalSn($terminalSn); return $this; }
     public function attach(?string $attach): self { $this->postAuthRequest->setAttach($attach); return $this; }
     public function notifyUrl(?string $notifyUrl): self { $this->postAuthRequest->setNotifyUrl($notifyUrl); return $this; }
+    public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->postAuthRequest->setPrintReceipt($printReceipt); return $this; }
 
     public function build(): PostAuthRequest
     {
