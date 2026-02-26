@@ -25,6 +25,8 @@ class VoidRequest
     private ?string $notifyUrl = null;
     /** Receipt print option. NONE/MERCHANT/CUSTOMER/BOTH. Default: NONE */
     private ?PrintReceiptOption $printReceipt = null;
+    /** Whether to push the transaction to the terminal. Default: true */
+    private ?bool $pushToTerminal = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -57,6 +59,9 @@ class VoidRequest
     public function getPrintReceipt(): ?PrintReceiptOption { return $this->printReceipt; }
     public function setPrintReceipt(?PrintReceiptOption $printReceipt): self { $this->printReceipt = $printReceipt; return $this; }
 
+    public function getPushToTerminal(): ?bool { return $this->pushToTerminal; }
+    public function setPushToTerminal(?bool $pushToTerminal): self { $this->pushToTerminal = $pushToTerminal; return $this; }
+
     public static function builder(): VoidRequestBuilder
     {
         return new VoidRequestBuilder();
@@ -82,6 +87,7 @@ class VoidRequestBuilder
     public function attach(?string $attach): self { $this->voidRequest->setAttach($attach); return $this; }
     public function notifyUrl(?string $notifyUrl): self { $this->voidRequest->setNotifyUrl($notifyUrl); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->voidRequest->setPrintReceipt($printReceipt); return $this; }
+    public function pushToTerminal(?bool $pushToTerminal): self { $this->voidRequest->setPushToTerminal($pushToTerminal); return $this; }
 
     public function build(): VoidRequest
     {

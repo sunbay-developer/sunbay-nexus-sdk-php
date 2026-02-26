@@ -31,6 +31,8 @@ class RefundRequest
     private ?string $timeExpire = null;
     /** Receipt print option. NONE/MERCHANT/CUSTOMER/BOTH. Default: NONE */
     private ?PrintReceiptOption $printReceipt = null;
+    /** Whether to push the transaction to the terminal. Default: true */
+    private ?bool $pushToTerminal = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -75,6 +77,9 @@ class RefundRequest
     public function getPrintReceipt(): ?PrintReceiptOption { return $this->printReceipt; }
     public function setPrintReceipt(?PrintReceiptOption $printReceipt): self { $this->printReceipt = $printReceipt; return $this; }
 
+    public function getPushToTerminal(): ?bool { return $this->pushToTerminal; }
+    public function setPushToTerminal(?bool $pushToTerminal): self { $this->pushToTerminal = $pushToTerminal; return $this; }
+
     public static function builder(): RefundRequestBuilder
     {
         return new RefundRequestBuilder();
@@ -104,6 +109,7 @@ class RefundRequestBuilder
     public function notifyUrl(?string $notifyUrl): self { $this->refundRequest->setNotifyUrl($notifyUrl); return $this; }
     public function timeExpire(?string $timeExpire): self { $this->refundRequest->setTimeExpire($timeExpire); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->refundRequest->setPrintReceipt($printReceipt); return $this; }
+    public function pushToTerminal(?bool $pushToTerminal): self { $this->refundRequest->setPushToTerminal($pushToTerminal); return $this; }
 
     public function build(): RefundRequest
     {
