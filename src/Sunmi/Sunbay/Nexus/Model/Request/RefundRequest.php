@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Request;
 
+use Sunmi\Sunbay\Nexus\Enum\CardNetworkType;
 use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
 use Sunmi\Sunbay\Nexus\Model\Common\RefundAmount;
@@ -33,6 +34,8 @@ class RefundRequest
     private ?PrintReceiptOption $printReceipt = null;
     /** Whether to push the transaction to the terminal. Default: true */
     private ?bool $pushToTerminal = null;
+    /** Card network type. Only when paymentMethod.category=CARD; omit for auto-detect */
+    private ?CardNetworkType $cardNetworkType = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -80,6 +83,9 @@ class RefundRequest
     public function getPushToTerminal(): ?bool { return $this->pushToTerminal; }
     public function setPushToTerminal(?bool $pushToTerminal): self { $this->pushToTerminal = $pushToTerminal; return $this; }
 
+    public function getCardNetworkType(): ?CardNetworkType { return $this->cardNetworkType; }
+    public function setCardNetworkType(?CardNetworkType $cardNetworkType): self { $this->cardNetworkType = $cardNetworkType; return $this; }
+
     public static function builder(): RefundRequestBuilder
     {
         return new RefundRequestBuilder();
@@ -110,6 +116,7 @@ class RefundRequestBuilder
     public function timeExpire(?string $timeExpire): self { $this->refundRequest->setTimeExpire($timeExpire); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->refundRequest->setPrintReceipt($printReceipt); return $this; }
     public function pushToTerminal(?bool $pushToTerminal): self { $this->refundRequest->setPushToTerminal($pushToTerminal); return $this; }
+    public function cardNetworkType(?CardNetworkType $cardNetworkType): self { $this->refundRequest->setCardNetworkType($cardNetworkType); return $this; }
 
     public function build(): RefundRequest
     {

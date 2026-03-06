@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Common;
 
+use Sunmi\Sunbay\Nexus\Enum\EbtSubId;
+
 /**
  * Payment method information
  *
@@ -21,6 +23,11 @@ class PaymentMethodInfo
      * Specific payment method: WECHAT (WeChat)/ALIPAY (Alipay) etc. For card payments, usually only category needs to be specified
      */
     private ?string $id = null;
+
+    /**
+     * Sub-payment type. When category=CARD cannot specify. Only when category=EBT and id=EBT can specify; values: SNAP, VOUCHER, BENEFIT.
+     */
+    private ?EbtSubId $subId = null;
 
     public function getCategory(): ?string
     {
@@ -41,6 +48,17 @@ class PaymentMethodInfo
     public function setId(?string $id): self
     {
         $this->id = $id;
+        return $this;
+    }
+
+    public function getSubId(): ?EbtSubId
+    {
+        return $this->subId;
+    }
+
+    public function setSubId(?EbtSubId $subId): self
+    {
+        $this->subId = $subId;
         return $this;
     }
 
@@ -68,6 +86,12 @@ class PaymentMethodInfoBuilder
     public function id(?string $id): self
     {
         $this->paymentMethodInfo->setId($id);
+        return $this;
+    }
+
+    public function subId(?EbtSubId $subId): self
+    {
+        $this->paymentMethodInfo->setSubId($subId);
         return $this;
     }
 

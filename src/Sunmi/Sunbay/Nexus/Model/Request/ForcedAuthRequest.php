@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Request;
 
+use Sunmi\Sunbay\Nexus\Enum\CardNetworkType;
 use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
 use Sunmi\Sunbay\Nexus\Model\Common\AuthAmount;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
@@ -29,6 +30,8 @@ class ForcedAuthRequest
     private ?string $timeExpire = null;
     /** Receipt print option. NONE/MERCHANT/CUSTOMER/BOTH. Default: NONE */
     private ?PrintReceiptOption $printReceipt = null;
+    /** Card network type. Only when paymentMethod.category=CARD; omit for auto-detect */
+    private ?CardNetworkType $cardNetworkType = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -67,6 +70,9 @@ class ForcedAuthRequest
     public function getPrintReceipt(): ?PrintReceiptOption { return $this->printReceipt; }
     public function setPrintReceipt(?PrintReceiptOption $printReceipt): self { $this->printReceipt = $printReceipt; return $this; }
 
+    public function getCardNetworkType(): ?CardNetworkType { return $this->cardNetworkType; }
+    public function setCardNetworkType(?CardNetworkType $cardNetworkType): self { $this->cardNetworkType = $cardNetworkType; return $this; }
+
     public static function builder(): ForcedAuthRequestBuilder
     {
         return new ForcedAuthRequestBuilder();
@@ -94,6 +100,7 @@ class ForcedAuthRequestBuilder
     public function notifyUrl(?string $notifyUrl): self { $this->forcedAuthRequest->setNotifyUrl($notifyUrl); return $this; }
     public function timeExpire(?string $timeExpire): self { $this->forcedAuthRequest->setTimeExpire($timeExpire); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->forcedAuthRequest->setPrintReceipt($printReceipt); return $this; }
+    public function cardNetworkType(?CardNetworkType $cardNetworkType): self { $this->forcedAuthRequest->setCardNetworkType($cardNetworkType); return $this; }
 
     public function build(): ForcedAuthRequest
     {
