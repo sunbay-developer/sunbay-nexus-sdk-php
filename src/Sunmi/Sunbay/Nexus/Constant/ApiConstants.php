@@ -85,6 +85,12 @@ class ApiConstants
     public const PATH_BATCH_QUERY = self::COMMON_PREFIX . '/settlement/batch-query';
     public const PATH_BATCH_CLOSE = self::COMMON_PREFIX . '/settlement/batch-close';
 
+    /**
+     * Online checkout API paths (hosted payment page and direct wallet payment)
+     */
+    public const PATH_CHECKOUT_CREATE_SESSION = self::COMMON_PREFIX . '/checkout/create-session';
+    public const PATH_CHECKOUT_SALE = self::COMMON_PREFIX . '/checkout/sale';
+
     private function __construct()
     {
     }

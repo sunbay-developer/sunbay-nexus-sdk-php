@@ -11,6 +11,8 @@ use Sunmi\Sunbay\Nexus\Model\Request\AbortRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\AuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\BatchCloseRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\BatchQueryRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\CheckoutSaleRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\CreateCheckoutSessionRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\ForcedAuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\IncrementalAuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\PostAuthRequest;
@@ -23,6 +25,8 @@ use Sunmi\Sunbay\Nexus\Model\Response\AbortResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\AuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\BatchCloseResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\BatchQueryResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\CheckoutSaleResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\CreateCheckoutSessionResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\ForcedAuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\IncrementalAuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\PostAuthResponse;
@@ -213,6 +217,31 @@ class NexusClient
         return $this->httpClient->post(ApiConstants::PATH_BATCH_CLOSE, $request, BatchCloseResponse::class);
     }
 
+    /**
+     * Create hosted payment page checkout session (POST /v1/checkout/create-session).
+     *
+     * @param CreateCheckoutSessionRequest $request create session request
+     * @return CreateCheckoutSessionResponse create session response
+     */
+    public function createCheckoutSession(CreateCheckoutSessionRequest $request): CreateCheckoutSessionResponse
+    {
+        return $this->httpClient->post(
+            ApiConstants::PATH_CHECKOUT_CREATE_SESSION,
+            $request,
+            CreateCheckoutSessionResponse::class
+        );
+    }
+
+    /**
+     * Direct online checkout sale (POST /v1/checkout/sale), e.g. Google Pay / Apple Pay.
+     *
+     * @param CheckoutSaleRequest $request checkout sale request
+     * @return CheckoutSaleResponse checkout sale response
+     */
+    public function checkoutSale(CheckoutSaleRequest $request): CheckoutSaleResponse
+    {
+        return $this->httpClient->post(ApiConstants::PATH_CHECKOUT_SALE, $request, CheckoutSaleResponse::class);
+    }
 
     /**
      * Builder for NexusClient
