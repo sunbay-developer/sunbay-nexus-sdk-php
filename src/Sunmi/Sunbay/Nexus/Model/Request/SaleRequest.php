@@ -8,6 +8,7 @@ use Sunmi\Sunbay\Nexus\Enum\CardNetworkType;
 use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
 use Sunmi\Sunbay\Nexus\Model\Common\SaleAmount;
+use Sunmi\Sunbay\Nexus\Model\Common\TipConfig;
 
 /**
  * Sale transaction request
@@ -32,6 +33,8 @@ class SaleRequest
     private ?PrintReceiptOption $printReceipt = null;
     /** Card network type. Only when paymentMethod.category=CARD; omit for auto-detect */
     private ?CardNetworkType $cardNetworkType = null;
+    /** Tip configuration */
+    private ?TipConfig $tipConfig = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -73,6 +76,9 @@ class SaleRequest
     public function getCardNetworkType(): ?CardNetworkType { return $this->cardNetworkType; }
     public function setCardNetworkType(?CardNetworkType $cardNetworkType): self { $this->cardNetworkType = $cardNetworkType; return $this; }
 
+    public function getTipConfig(): ?TipConfig { return $this->tipConfig; }
+    public function setTipConfig(?TipConfig $tipConfig): self { $this->tipConfig = $tipConfig; return $this; }
+
     public static function builder(): SaleRequestBuilder
     {
         return new SaleRequestBuilder();
@@ -101,6 +107,7 @@ class SaleRequestBuilder
     public function timeExpire(?string $timeExpire): self { $this->saleRequest->setTimeExpire($timeExpire); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->saleRequest->setPrintReceipt($printReceipt); return $this; }
     public function cardNetworkType(?CardNetworkType $cardNetworkType): self { $this->saleRequest->setCardNetworkType($cardNetworkType); return $this; }
+    public function tipConfig(?TipConfig $tipConfig): self { $this->saleRequest->setTipConfig($tipConfig); return $this; }
 
     public function build(): SaleRequest
     {

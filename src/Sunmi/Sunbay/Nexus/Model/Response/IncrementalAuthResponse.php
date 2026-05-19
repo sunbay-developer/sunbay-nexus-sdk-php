@@ -17,6 +17,7 @@ class IncrementalAuthResponse extends BaseResponse
     private ?string $transactionId = null;
     private ?string $referenceOrderId = null;
     private ?string $transactionRequestId = null;
+    private ?string $transactionStatus = null;
 
     public function getTransactionId(): ?string { return $this->transactionId; }
     public function setTransactionId(?string $transactionId): self { $this->transactionId = $transactionId; return $this; }
@@ -26,5 +27,8 @@ class IncrementalAuthResponse extends BaseResponse
 
     public function getTransactionRequestId(): ?string { return $this->transactionRequestId; }
     public function setTransactionRequestId(?string $transactionRequestId): self { $this->transactionRequestId = $transactionRequestId; return $this; }
+
+    public function getTransactionStatus(): ?string { return $this->transactionStatus; }
+    public function setTransactionStatus(?string $transactionStatus): self { $this->transactionStatus = $transactionStatus; return $this; }
 }
 

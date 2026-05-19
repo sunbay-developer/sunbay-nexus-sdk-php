@@ -6,6 +6,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
 
 use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
 use Sunmi\Sunbay\Nexus\Model\Common\PostAuthAmount;
+use Sunmi\Sunbay\Nexus\Model\Common\TipConfig;
 
 /**
  * Post authorization request
@@ -29,6 +30,8 @@ class PostAuthRequest
     private ?PrintReceiptOption $printReceipt = null;
     /** Whether to push the transaction to the terminal. Default: true */
     private ?bool $pushToTerminal = null;
+    /** Tip configuration */
+    private ?TipConfig $tipConfig = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -67,6 +70,9 @@ class PostAuthRequest
     public function getPushToTerminal(): ?bool { return $this->pushToTerminal; }
     public function setPushToTerminal(?bool $pushToTerminal): self { $this->pushToTerminal = $pushToTerminal; return $this; }
 
+    public function getTipConfig(): ?TipConfig { return $this->tipConfig; }
+    public function setTipConfig(?TipConfig $tipConfig): self { $this->tipConfig = $tipConfig; return $this; }
+
     public static function builder(): PostAuthRequestBuilder
     {
         return new PostAuthRequestBuilder();
@@ -94,6 +100,7 @@ class PostAuthRequestBuilder
     public function notifyUrl(?string $notifyUrl): self { $this->postAuthRequest->setNotifyUrl($notifyUrl); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->postAuthRequest->setPrintReceipt($printReceipt); return $this; }
     public function pushToTerminal(?bool $pushToTerminal): self { $this->postAuthRequest->setPushToTerminal($pushToTerminal); return $this; }
+    public function tipConfig(?TipConfig $tipConfig): self { $this->postAuthRequest->setTipConfig($tipConfig); return $this; }
 
     public function build(): PostAuthRequest
     {
