@@ -41,7 +41,7 @@ class QueryResponse extends BaseResponse
     private ?string $attach = null;
     /** Related transaction status: VOIDED/INCREMENTAL/REFUNDED/CAPTURE/PART_REFUNDED */
     private ?string $relatedTransactionStatus = null;
-    /** Batch settlement status: NB(no batch needed)/UB(waiting for batch close)/BC(batch closed) */
+    /** Batch settlement status: N(no batch needed)/U(unfinished batch)/C(completed batch) */
     private ?string $transactionBatchStatus = null;
 
     // Getters and setters
@@ -123,4 +123,3 @@ class QueryResponse extends BaseResponse
     public function getTransactionBatchStatus(): ?string { return $this->transactionBatchStatus; }
     public function setTransactionBatchStatus(?string $transactionBatchStatus): self { $this->transactionBatchStatus = $transactionBatchStatus; return $this; }
 }
-
