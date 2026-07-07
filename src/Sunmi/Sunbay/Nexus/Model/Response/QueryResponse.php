@@ -39,6 +39,10 @@ class QueryResponse extends BaseResponse
     private ?string $terminalSn = null;
     private ?string $description = null;
     private ?string $attach = null;
+    /** Related transaction status: VOIDED/INCREMENTAL/REFUNDED/CAPTURE/PART_REFUNDED */
+    private ?string $relatedTransactionStatus = null;
+    /** Batch settlement status: NB(no batch needed)/UB(waiting for batch close)/BC(batch closed) */
+    private ?string $transactionBatchStatus = null;
 
     // Getters and setters
     public function getTransactionId(): ?string { return $this->transactionId; }
@@ -112,5 +116,11 @@ class QueryResponse extends BaseResponse
 
     public function getAttach(): ?string { return $this->attach; }
     public function setAttach(?string $attach): self { $this->attach = $attach; return $this; }
+
+    public function getRelatedTransactionStatus(): ?string { return $this->relatedTransactionStatus; }
+    public function setRelatedTransactionStatus(?string $relatedTransactionStatus): self { $this->relatedTransactionStatus = $relatedTransactionStatus; return $this; }
+
+    public function getTransactionBatchStatus(): ?string { return $this->transactionBatchStatus; }
+    public function setTransactionBatchStatus(?string $transactionBatchStatus): self { $this->transactionBatchStatus = $transactionBatchStatus; return $this; }
 }
 

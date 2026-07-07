@@ -6,6 +6,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
 
 use Sunmi\Sunbay\Nexus\Enum\CardNetworkType;
 use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
+use Sunmi\Sunbay\Nexus\Enum\SignatureEntryLocation;
 use Sunmi\Sunbay\Nexus\Model\Common\AuthAmount;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
 
@@ -32,6 +33,8 @@ class AuthRequest
     private ?PrintReceiptOption $printReceipt = null;
     /** Card network type. Only when paymentMethod.category=CARD; omit for auto-detect */
     private ?CardNetworkType $cardNetworkType = null;
+    /** Signature entry location. Optional: ON_SCREEN / ON_RECEIPT */
+    private ?SignatureEntryLocation $signatureEntryLocation = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -73,6 +76,9 @@ class AuthRequest
     public function getCardNetworkType(): ?CardNetworkType { return $this->cardNetworkType; }
     public function setCardNetworkType(?CardNetworkType $cardNetworkType): self { $this->cardNetworkType = $cardNetworkType; return $this; }
 
+    public function getSignatureEntryLocation(): ?SignatureEntryLocation { return $this->signatureEntryLocation; }
+    public function setSignatureEntryLocation(?SignatureEntryLocation $signatureEntryLocation): self { $this->signatureEntryLocation = $signatureEntryLocation; return $this; }
+
     public static function builder(): AuthRequestBuilder
     {
         return new AuthRequestBuilder();
@@ -101,10 +107,10 @@ class AuthRequestBuilder
     public function timeExpire(?string $timeExpire): self { $this->authRequest->setTimeExpire($timeExpire); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->authRequest->setPrintReceipt($printReceipt); return $this; }
     public function cardNetworkType(?CardNetworkType $cardNetworkType): self { $this->authRequest->setCardNetworkType($cardNetworkType); return $this; }
+    public function signatureEntryLocation(?SignatureEntryLocation $signatureEntryLocation): self { $this->authRequest->setSignatureEntryLocation($signatureEntryLocation); return $this; }
 
     public function build(): AuthRequest
     {
         return $this->authRequest;
     }
 }
-

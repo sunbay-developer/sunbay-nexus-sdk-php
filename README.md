@@ -213,6 +213,7 @@ The SDK provides type-safe enums for common payment-related values. These enums 
 - **`CardNetworkType`** - Card network types (CREDIT, DEBIT, EBT, EGC, UNKNOWN)
 - **`EntryMode`** - Card entry modes (MANUAL, SWIPE, FALLBACK_SWIPE, CONTACT, CONTACTLESS)
 - **`AuthenticationMethod`** - Authentication methods (NOT_AUTHENTICATED, PIN, OFFLINE_PIN, BY_PASS, SIGNATURE)
+- **`SignatureEntryLocation`** - Signature entry locations (ON_SCREEN, ON_RECEIPT)
 
 ### Usage Example
 
@@ -256,4 +257,3 @@ $json = json_encode(['category' => PaymentCategory::QR_MPM->value]);
 ## License
 
 MIT License
-

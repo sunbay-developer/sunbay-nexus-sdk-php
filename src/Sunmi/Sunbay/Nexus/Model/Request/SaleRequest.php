@@ -6,6 +6,7 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
 
 use Sunmi\Sunbay\Nexus\Enum\CardNetworkType;
 use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
+use Sunmi\Sunbay\Nexus\Enum\SignatureEntryLocation;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
 use Sunmi\Sunbay\Nexus\Model\Common\SaleAmount;
 use Sunmi\Sunbay\Nexus\Model\Common\TipConfig;
@@ -35,6 +36,8 @@ class SaleRequest
     private ?CardNetworkType $cardNetworkType = null;
     /** Tip configuration */
     private ?TipConfig $tipConfig = null;
+    /** Signature entry location. Optional: ON_SCREEN / ON_RECEIPT */
+    private ?SignatureEntryLocation $signatureEntryLocation = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -79,6 +82,9 @@ class SaleRequest
     public function getTipConfig(): ?TipConfig { return $this->tipConfig; }
     public function setTipConfig(?TipConfig $tipConfig): self { $this->tipConfig = $tipConfig; return $this; }
 
+    public function getSignatureEntryLocation(): ?SignatureEntryLocation { return $this->signatureEntryLocation; }
+    public function setSignatureEntryLocation(?SignatureEntryLocation $signatureEntryLocation): self { $this->signatureEntryLocation = $signatureEntryLocation; return $this; }
+
     public static function builder(): SaleRequestBuilder
     {
         return new SaleRequestBuilder();
@@ -108,6 +114,7 @@ class SaleRequestBuilder
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->saleRequest->setPrintReceipt($printReceipt); return $this; }
     public function cardNetworkType(?CardNetworkType $cardNetworkType): self { $this->saleRequest->setCardNetworkType($cardNetworkType); return $this; }
     public function tipConfig(?TipConfig $tipConfig): self { $this->saleRequest->setTipConfig($tipConfig); return $this; }
+    public function signatureEntryLocation(?SignatureEntryLocation $signatureEntryLocation): self { $this->saleRequest->setSignatureEntryLocation($signatureEntryLocation); return $this; }
 
     public function build(): SaleRequest
     {

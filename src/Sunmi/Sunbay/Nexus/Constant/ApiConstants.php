@@ -90,6 +90,7 @@ class ApiConstants
      */
     public const PATH_CHECKOUT_CREATE_SESSION = self::COMMON_PREFIX . '/checkout/create-session';
     public const PATH_CHECKOUT_SALE = self::COMMON_PREFIX . '/checkout/sale';
+    public const PATH_CHECKOUT_REFUND = self::COMMON_PREFIX . '/checkout/refund';
 
     private function __construct()
     {

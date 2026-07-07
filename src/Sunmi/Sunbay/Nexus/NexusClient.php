@@ -20,6 +20,7 @@ use Sunmi\Sunbay\Nexus\Model\Request\QueryRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\RefundRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\SaleRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\TipAdjustRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\OnlineRefundRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\VoidRequest;
 use Sunmi\Sunbay\Nexus\Model\Response\AbortResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\AuthResponse;
@@ -28,6 +29,7 @@ use Sunmi\Sunbay\Nexus\Model\Response\BatchQueryResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\CheckoutSaleResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\CreateCheckoutSessionResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\ForcedAuthResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\OnlineRefundResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\IncrementalAuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\PostAuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\QueryResponse;
@@ -241,6 +243,17 @@ class NexusClient
     public function checkoutSale(CheckoutSaleRequest $request): CheckoutSaleResponse
     {
         return $this->httpClient->post(ApiConstants::PATH_CHECKOUT_SALE, $request, CheckoutSaleResponse::class);
+    }
+
+    /**
+     * Online refund (POST /v1/checkout/refund).
+     *
+     * @param OnlineRefundRequest $request online refund request
+     * @return OnlineRefundResponse online refund response
+     */
+    public function onlineRefund(OnlineRefundRequest $request): OnlineRefundResponse
+    {
+        return $this->httpClient->post(ApiConstants::PATH_CHECKOUT_REFUND, $request, OnlineRefundResponse::class);
     }
 
     /**
