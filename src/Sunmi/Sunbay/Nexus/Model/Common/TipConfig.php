@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Common;
 
-use InvalidArgumentException;
-
 /**
  * Tip configuration
  *
@@ -30,11 +28,9 @@ class TipConfig
     private ?bool $tipWithTax = null;
 
     /**
-     * Tip suggestions configuration, max 3
-     *
-     * @var TipSuggestions[]|null
+     * Tip suggestions configuration
      */
-    private ?array $suggestions = null;
+    private ?TipSuggestions $suggestions = null;
 
     public function getOnScreenTip(): ?bool
     {
@@ -69,31 +65,13 @@ class TipConfig
         return $this;
     }
 
-    /**
-     * @return TipSuggestions[]|null
-     */
-    public function getSuggestions(): ?array
+    public function getSuggestions(): ?TipSuggestions
     {
         return $this->suggestions;
     }
 
-    /**
-     * @param TipSuggestions[]|null $suggestions
-     */
-    public function setSuggestions(?array $suggestions): self
+    public function setSuggestions(?TipSuggestions $suggestions): self
     {
-        if ($suggestions !== null) {
-            if (count($suggestions) > 3) {
-                throw new InvalidArgumentException('Tip suggestions can contain at most 3 items.');
-            }
-
-            foreach ($suggestions as $suggestion) {
-                if (!$suggestion instanceof TipSuggestions) {
-                    throw new InvalidArgumentException('Each tip suggestion must be an instance of ' . TipSuggestions::class . '.');
-                }
-            }
-        }
-
         $this->suggestions = $suggestions;
         return $this;
     }
@@ -131,10 +109,7 @@ class TipConfigBuilder
         return $this;
     }
 
-    /**
-     * @param TipSuggestions[]|null $suggestions
-     */
-    public function suggestions(?array $suggestions): self
+    public function suggestions(?TipSuggestions $suggestions): self
     {
         $this->tipConfig->setSuggestions($suggestions);
         return $this;
