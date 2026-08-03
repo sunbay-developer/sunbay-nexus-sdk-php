@@ -89,6 +89,7 @@ class ApiConstants
      * Online checkout API paths (hosted payment page and direct wallet payment)
      */
     public const PATH_CHECKOUT_CREATE_SESSION = self::COMMON_PREFIX . '/checkout/create-session';
+    public const PATH_CHECKOUT_EXPIRE_SESSION = self::COMMON_PREFIX . '/checkout/expire-session';
     public const PATH_CHECKOUT_SALE = self::COMMON_PREFIX . '/checkout/sale';
     public const PATH_CHECKOUT_REFUND = self::COMMON_PREFIX . '/checkout/refund';
 

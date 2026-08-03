@@ -13,6 +13,7 @@ use Sunmi\Sunbay\Nexus\Model\Request\BatchCloseRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\BatchQueryRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\CheckoutSaleRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\CreateCheckoutSessionRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\ExpireCheckoutSessionRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\ForcedAuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\IncrementalAuthRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\PostAuthRequest;
@@ -28,6 +29,7 @@ use Sunmi\Sunbay\Nexus\Model\Response\BatchCloseResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\BatchQueryResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\CheckoutSaleResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\CreateCheckoutSessionResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\ExpireCheckoutSessionResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\ForcedAuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\OnlineRefundResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\IncrementalAuthResponse;
@@ -231,6 +233,21 @@ class NexusClient
             ApiConstants::PATH_CHECKOUT_CREATE_SESSION,
             $request,
             CreateCheckoutSessionResponse::class
+        );
+    }
+
+    /**
+     * Expire/close a checkout session (POST /v1/checkout/expire-session).
+     *
+     * @param ExpireCheckoutSessionRequest $request expire session request
+     * @return ExpireCheckoutSessionResponse expire session response
+     */
+    public function expireCheckoutSession(ExpireCheckoutSessionRequest $request): ExpireCheckoutSessionResponse
+    {
+        return $this->httpClient->post(
+            ApiConstants::PATH_CHECKOUT_EXPIRE_SESSION,
+            $request,
+            ExpireCheckoutSessionResponse::class
         );
     }
 
