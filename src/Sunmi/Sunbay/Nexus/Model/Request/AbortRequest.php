@@ -12,6 +12,24 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
  */
 class AbortRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $originalTransactionId = null,
+        ?string $originalTransactionRequestId = null,
+        ?string $terminalSn = null,
+        ?string $description = null,
+        ?string $attach = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($originalTransactionId !== null) $this->setOriginalTransactionId($originalTransactionId);
+        if ($originalTransactionRequestId !== null) $this->setOriginalTransactionRequestId($originalTransactionRequestId);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+        if ($description !== null) $this->setDescription($description);
+        if ($attach !== null) $this->setAttach($attach);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $originalTransactionId = null;

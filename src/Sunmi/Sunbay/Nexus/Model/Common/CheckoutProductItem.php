@@ -12,6 +12,16 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class CheckoutProductItem
 {
+    public function __construct(
+        ?int $amount = null,
+        ?string $name = null,
+        ?int $num = null
+    ) {
+        if ($amount !== null) $this->setAmount($amount);
+        if ($name !== null) $this->setName($name);
+        if ($num !== null) $this->setNum($num);
+    }
+
     private ?int $amount = null;
     private ?string $name = null;
     private ?int $num = null;

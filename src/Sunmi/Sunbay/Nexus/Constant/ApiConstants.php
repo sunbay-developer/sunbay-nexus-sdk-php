@@ -84,6 +84,13 @@ class ApiConstants
      */
     public const PATH_BATCH_QUERY = self::COMMON_PREFIX . '/settlement/batch-query';
     public const PATH_BATCH_CLOSE = self::COMMON_PREFIX . '/settlement/batch-close';
+    public const PATH_BATCH_CLOSE_LIST = self::COMMON_PREFIX . '/settlement/batch-close-list';
+
+    /**
+     * Merchant API paths
+     */
+    public const PATH_MERCHANT_QUERY = self::COMMON_PREFIX . '/merchant/query';
+    public const PATH_MERCHANT_TERMINALS_QUERY = self::COMMON_PREFIX . '/merchant/terminals/query';
 
     /**
      * Online checkout API paths (hosted payment page and direct wallet payment)

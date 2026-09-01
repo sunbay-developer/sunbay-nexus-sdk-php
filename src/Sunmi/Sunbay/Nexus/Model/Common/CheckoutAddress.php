@@ -12,6 +12,22 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class CheckoutAddress
 {
+    public function __construct(
+        ?string $line1 = null,
+        ?string $line2 = null,
+        ?string $city = null,
+        ?string $state = null,
+        ?string $postalCode = null,
+        ?string $country = null
+    ) {
+        if ($line1 !== null) $this->setLine1($line1);
+        if ($line2 !== null) $this->setLine2($line2);
+        if ($city !== null) $this->setCity($city);
+        if ($state !== null) $this->setState($state);
+        if ($postalCode !== null) $this->setPostalCode($postalCode);
+        if ($country !== null) $this->setCountry($country);
+    }
+
     private ?string $line1 = null;
     private ?string $line2 = null;
     private ?string $city = null;

@@ -14,6 +14,22 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class SaleAmount
 {
+    public function __construct(
+        ?int $orderAmount = null,
+        ?int $tipAmount = null,
+        ?int $taxAmount = null,
+        ?int $surchargeAmount = null,
+        ?int $cashbackAmount = null,
+        ?string $priceCurrency = null
+    ) {
+        if ($orderAmount !== null) $this->setOrderAmount($orderAmount);
+        if ($tipAmount !== null) $this->setTipAmount($tipAmount);
+        if ($taxAmount !== null) $this->setTaxAmount($taxAmount);
+        if ($surchargeAmount !== null) $this->setSurchargeAmount($surchargeAmount);
+        if ($cashbackAmount !== null) $this->setCashbackAmount($cashbackAmount);
+        if ($priceCurrency !== null) $this->setPriceCurrency($priceCurrency);
+    }
+
     /**
      * Order amount in cents (required, e.g., 10000 = $100.00)
      */

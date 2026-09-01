@@ -14,6 +14,16 @@ use Sunmi\Sunbay\Nexus\Enum\EbtSubId;
  */
 class PaymentMethodInfo
 {
+    public function __construct(
+        ?string $category = null,
+        ?string $id = null,
+        ?EbtSubId $subId = null
+    ) {
+        if ($category !== null) $this->setCategory($category);
+        if ($id !== null) $this->setId($id);
+        if ($subId !== null) $this->setSubId($subId);
+    }
+
     /**
      * Payment category: CARD (bank card)/CARD-CREDIT (credit card network)/CARD-DEBIT (debit card network)/QR-MPM (QR code merchant present mode)/QR-CPM (QR code customer present mode)
      */

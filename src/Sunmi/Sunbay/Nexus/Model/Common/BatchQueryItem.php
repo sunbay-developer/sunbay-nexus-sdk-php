@@ -15,6 +15,28 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class BatchQueryItem
 {
+    public function __construct(
+        ?string $batchNo = null,
+        ?string $startTime = null,
+        ?string $channelCode = null,
+        ?string $priceCurrency = null,
+        ?int $totalCount = null,
+        ?int $netAmount = null,
+        ?int $tipAmount = null,
+        ?int $surchargeAmount = null,
+        ?int $taxAmount = null
+    ) {
+        if ($batchNo !== null) $this->setBatchNo($batchNo);
+        if ($startTime !== null) $this->setStartTime($startTime);
+        if ($channelCode !== null) $this->setChannelCode($channelCode);
+        if ($priceCurrency !== null) $this->setPriceCurrency($priceCurrency);
+        if ($totalCount !== null) $this->setTotalCount($totalCount);
+        if ($netAmount !== null) $this->setNetAmount($netAmount);
+        if ($tipAmount !== null) $this->setTipAmount($tipAmount);
+        if ($surchargeAmount !== null) $this->setSurchargeAmount($surchargeAmount);
+        if ($taxAmount !== null) $this->setTaxAmount($taxAmount);
+    }
+
     private ?string $batchNo = null;
     private ?string $startTime = null;
     private ?string $channelCode = null;

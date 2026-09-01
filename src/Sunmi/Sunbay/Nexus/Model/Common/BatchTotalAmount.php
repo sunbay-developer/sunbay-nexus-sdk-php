@@ -13,6 +13,14 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class BatchTotalAmount
 {
+    public function __construct(
+        ?string $priceCurrency = null,
+        ?int $amount = null
+    ) {
+        if ($priceCurrency !== null) $this->setPriceCurrency($priceCurrency);
+        if ($amount !== null) $this->setAmount($amount);
+    }
+
     private ?string $priceCurrency = null;
     private ?int $amount = null;
 

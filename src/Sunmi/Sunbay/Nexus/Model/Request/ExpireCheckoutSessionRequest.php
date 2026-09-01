@@ -12,6 +12,18 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
  */
 class ExpireCheckoutSessionRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $sessionId = null,
+        ?string $reason = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($sessionId !== null) $this->setSessionId($sessionId);
+        if ($reason !== null) $this->setReason($reason);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $sessionId = null;

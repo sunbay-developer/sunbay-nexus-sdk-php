@@ -12,6 +12,22 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class OnlineRefundAmount
 {
+    public function __construct(
+        ?string $priceCurrency = null,
+        ?int $totalAmount = null,
+        ?int $orderAmount = null,
+        ?int $taxAmount = null,
+        ?int $surchargeAmount = null,
+        ?int $tipAmount = null
+    ) {
+        if ($priceCurrency !== null) $this->setPriceCurrency($priceCurrency);
+        if ($totalAmount !== null) $this->setTotalAmount($totalAmount);
+        if ($orderAmount !== null) $this->setOrderAmount($orderAmount);
+        if ($taxAmount !== null) $this->setTaxAmount($taxAmount);
+        if ($surchargeAmount !== null) $this->setSurchargeAmount($surchargeAmount);
+        if ($tipAmount !== null) $this->setTipAmount($tipAmount);
+    }
+
     private ?string $priceCurrency = null;
     private ?int $totalAmount = null;
     private ?int $orderAmount = null;

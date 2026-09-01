@@ -13,6 +13,24 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
  */
 class TipAdjustRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $terminalSn = null,
+        ?string $originalTransactionId = null,
+        ?string $originalTransactionRequestId = null,
+        ?int $tipAmount = null,
+        ?string $attach = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+        if ($originalTransactionId !== null) $this->setOriginalTransactionId($originalTransactionId);
+        if ($originalTransactionRequestId !== null) $this->setOriginalTransactionRequestId($originalTransactionRequestId);
+        if ($tipAmount !== null) $this->setTipAmount($tipAmount);
+        if ($attach !== null) $this->setAttach($attach);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $terminalSn = null;

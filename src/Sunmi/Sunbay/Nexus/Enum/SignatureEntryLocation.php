@@ -21,4 +21,9 @@ enum SignatureEntryLocation: string
      * Receipt signature
      */
     case ON_RECEIPT = 'ON_RECEIPT';
+
+    /**
+     * No signature required
+     */
+    case NONE = 'NONE';
 }

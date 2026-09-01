@@ -8,10 +8,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ConnectException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Pool;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sunmi\Sunbay\Nexus\Constant\ApiConstants;
@@ -44,6 +42,7 @@ class HttpClient
     private Client $httpClient;
     private int $maxRetries;
     private LoggerInterface $logger;
+    private string $userAgent;
 
     public function __construct(
         string $apiKey,
@@ -59,6 +58,7 @@ class HttpClient
         $this->baseUrl = $baseUrl;
         $this->maxRetries = $maxRetries;
         $this->logger = $logger ?? new NullLogger();
+        $this->userAgent = UserAgentUtil::buildUserAgent();
 
         $config = [
             RequestOptions::TIMEOUT => $readTimeout / 1000,
@@ -66,8 +66,19 @@ class HttpClient
             RequestOptions::HTTP_ERRORS => false,
         ];
 
-        // Connection pool configuration is handled by Guzzle automatically
-        // maxTotal and maxPerRoute are kept for future use if needed
+        // Apply connection pool limits via CurlMultiHandler options
+        $multiOptions = [];
+        if ($maxTotal !== null && defined('CURLMOPT_MAX_TOTAL_CONNECTIONS')) {
+            $multiOptions[CURLMOPT_MAX_TOTAL_CONNECTIONS] = $maxTotal;
+        }
+        if ($maxPerRoute !== null && defined('CURLMOPT_MAX_HOST_CONNECTIONS')) {
+            $multiOptions[CURLMOPT_MAX_HOST_CONNECTIONS] = $maxPerRoute;
+        }
+        if (!empty($multiOptions)) {
+            $config['handler'] = \GuzzleHttp\HandlerStack::create(
+                new \GuzzleHttp\Handler\CurlMultiHandler(['options' => $multiOptions])
+            );
+        }
 
         $this->httpClient = new Client($config);
     }
@@ -185,7 +196,7 @@ class HttpClient
     {
         $headers = [
             self::HEADER_AUTHORIZATION => ApiConstants::AUTHORIZATION_BEARER_PREFIX . $this->apiKey,
-            self::HEADER_USER_AGENT => UserAgentUtil::buildUserAgent(),
+            self::HEADER_USER_AGENT => $this->userAgent,
             self::HEADER_REQUEST_ID => IdGenerator::generateRequestId(),
             self::HEADER_TIMESTAMP => (string)(int)(microtime(true) * 1000),
         ];
@@ -212,21 +223,23 @@ class HttpClient
 
         while ($attempts < $maxAttempts) {
             $attempts++;
+
+            // Refresh request ID and timestamp on each attempt for accurate tracing
+            if ($attempts > 1) {
+                $request = $request
+                    ->withHeader(self::HEADER_REQUEST_ID, IdGenerator::generateRequestId())
+                    ->withHeader(self::HEADER_TIMESTAMP, (string)(int)(microtime(true) * 1000));
+            }
+
             try {
                 return $this->doExecute($request, $responseType);
             } catch (SunbayNetworkException $e) {
                 if (!$retryable || $attempts >= $maxAttempts) {
-                    // Log final failure
-                    if ($this->logger !== null) {
-                        $this->logger->warning("Request failed after {$attempts} attempts: {$e->getMessage()}");
-                    }
+                    $this->logger->warning("Request failed after {$attempts} attempts: {$e->getMessage()}");
                     throw $e;
                 }
 
-                // Log retry
-                if ($this->logger !== null) {
-                    $this->logger->debug("Request failed, retrying ({$attempts}/{$maxAttempts}) after delay: {$e->getMessage()}");
-                }
+                $this->logger->debug("Request failed, retrying ({$attempts}/{$maxAttempts}) after delay: {$e->getMessage()}");
 
                 // Retry after delay
                 usleep(self::RETRY_DELAY_BASE_MS * 1000 * $attempts);
@@ -247,13 +260,13 @@ class HttpClient
     {
         $requestUrl = (string)$request->getUri();
         $requestMethod = $request->getMethod();
-        $requestBody = $this->extractRequestBody($request);
 
-        // Log request
-        if ($this->logger !== null) {
+        // Log request (extract body only when logger needs it)
+        if ($this->logger !== null && !($this->logger instanceof NullLogger)) {
             $headers = $this->maskSensitiveHeaders($request->getHeaders());
             $headersStr = $this->formatHeaders($headers);
-            
+            $requestBody = $this->extractRequestBody($request);
+
             if ($requestBody !== null && $requestBody !== '') {
                 $this->logger->info("Request {$requestMethod} {$requestUrl} - Headers: {$headersStr} - Body: {$requestBody}");
             } else {
@@ -349,14 +362,11 @@ class HttpClient
             // Extract data field if exists
             $dataNode = $data[ApiConstants::JSON_FIELD_DATA] ?? null;
 
-            // Create response object
+            // Create response object — pass decoded array directly, no re-encoding
             if ($dataNode !== null && !empty($dataNode)) {
-                // Merge data field with base response
-                $dataJson = json_encode($dataNode);
-                $result = JsonUtil::fromJson($dataJson, $responseType);
+                $result = JsonUtil::fromArray($dataNode, $responseType);
             } else {
-                // No data field, parse entire response
-                $result = JsonUtil::fromJson($responseBody, $responseType);
+                $result = JsonUtil::fromArray($data, $responseType);
             }
 
             // Set base fields

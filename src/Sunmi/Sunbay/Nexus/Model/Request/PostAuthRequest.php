@@ -16,6 +16,38 @@ use Sunmi\Sunbay\Nexus\Model\Common\TipConfig;
  */
 class PostAuthRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $originalTransactionId = null,
+        ?string $originalTransactionRequestId = null,
+        ?string $transactionRequestId = null,
+        ?PostAuthAmount $amount = null,
+        ?string $description = null,
+        ?string $terminalSn = null,
+        ?string $attach = null,
+        ?string $notifyUrl = null,
+        ?PrintReceiptOption $printReceipt = null,
+        ?bool $pushToTerminal = null,
+        ?TipConfig $tipConfig = null,
+        ?string $terminalEventNotifyUrl = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($originalTransactionId !== null) $this->setOriginalTransactionId($originalTransactionId);
+        if ($originalTransactionRequestId !== null) $this->setOriginalTransactionRequestId($originalTransactionRequestId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($amount !== null) $this->setAmount($amount);
+        if ($description !== null) $this->setDescription($description);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+        if ($attach !== null) $this->setAttach($attach);
+        if ($notifyUrl !== null) $this->setNotifyUrl($notifyUrl);
+        if ($printReceipt !== null) $this->setPrintReceipt($printReceipt);
+        if ($pushToTerminal !== null) $this->setPushToTerminal($pushToTerminal);
+        if ($tipConfig !== null) $this->setTipConfig($tipConfig);
+        if ($terminalEventNotifyUrl !== null) $this->setTerminalEventNotifyUrl($terminalEventNotifyUrl);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $originalTransactionId = null;
@@ -32,6 +64,8 @@ class PostAuthRequest
     private ?bool $pushToTerminal = null;
     /** Tip configuration */
     private ?TipConfig $tipConfig = null;
+    /** Terminal event async notify URL. Receive real-time terminal status events (card swipe, signature, print, etc.) during a transaction */
+    private ?string $terminalEventNotifyUrl = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -73,6 +107,9 @@ class PostAuthRequest
     public function getTipConfig(): ?TipConfig { return $this->tipConfig; }
     public function setTipConfig(?TipConfig $tipConfig): self { $this->tipConfig = $tipConfig; return $this; }
 
+    public function getTerminalEventNotifyUrl(): ?string { return $this->terminalEventNotifyUrl; }
+    public function setTerminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->terminalEventNotifyUrl = $terminalEventNotifyUrl; return $this; }
+
     public static function builder(): PostAuthRequestBuilder
     {
         return new PostAuthRequestBuilder();
@@ -101,6 +138,7 @@ class PostAuthRequestBuilder
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->postAuthRequest->setPrintReceipt($printReceipt); return $this; }
     public function pushToTerminal(?bool $pushToTerminal): self { $this->postAuthRequest->setPushToTerminal($pushToTerminal); return $this; }
     public function tipConfig(?TipConfig $tipConfig): self { $this->postAuthRequest->setTipConfig($tipConfig); return $this; }
+    public function terminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->postAuthRequest->setTerminalEventNotifyUrl($terminalEventNotifyUrl); return $this; }
 
     public function build(): PostAuthRequest
     {

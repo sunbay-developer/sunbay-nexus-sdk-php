@@ -15,6 +15,20 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class PostAuthAmount
 {
+    public function __construct(
+        ?int $orderAmount = null,
+        ?int $tipAmount = null,
+        ?int $taxAmount = null,
+        ?int $surchargeAmount = null,
+        ?string $priceCurrency = null
+    ) {
+        if ($orderAmount !== null) $this->setOrderAmount($orderAmount);
+        if ($tipAmount !== null) $this->setTipAmount($tipAmount);
+        if ($taxAmount !== null) $this->setTaxAmount($taxAmount);
+        if ($surchargeAmount !== null) $this->setSurchargeAmount($surchargeAmount);
+        if ($priceCurrency !== null) $this->setPriceCurrency($priceCurrency);
+    }
+
     private ?int $orderAmount = null;
     private ?int $tipAmount = null;
     private ?int $taxAmount = null;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sunmi\Sunbay\Nexus\Model\Request;
 
+use Sunmi\Sunbay\Nexus\Enum\BatchPrintReceiptOption;
+
 /**
  * Batch close request
  *
@@ -12,12 +14,32 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
  */
 class BatchCloseRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $transactionRequestId = null,
+        ?string $terminalSn = null,
+        ?string $channelCode = null,
+        ?string $description = null,
+        ?BatchPrintReceiptOption $printReceipt = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+        if ($channelCode !== null) $this->setChannelCode($channelCode);
+        if ($description !== null) $this->setDescription($description);
+        if ($printReceipt !== null) $this->setPrintReceipt($printReceipt);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $transactionRequestId = null;
     private ?string $terminalSn = null;
     private ?string $channelCode = null;
     private ?string $description = null;
+    /** Batch report print option. TOTAL/DETAIL/BOTH/NONE/AUTO. Default: use platform config */
+    private ?BatchPrintReceiptOption $printReceipt = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -37,6 +59,9 @@ class BatchCloseRequest
 
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): self { $this->description = $description; return $this; }
+
+    public function getPrintReceipt(): ?BatchPrintReceiptOption { return $this->printReceipt; }
+    public function setPrintReceipt(?BatchPrintReceiptOption $printReceipt): self { $this->printReceipt = $printReceipt; return $this; }
 
     public static function builder(): BatchCloseRequestBuilder
     {
@@ -59,6 +84,7 @@ class BatchCloseRequestBuilder
     public function terminalSn(?string $terminalSn): self { $this->batchCloseRequest->setTerminalSn($terminalSn); return $this; }
     public function channelCode(?string $channelCode): self { $this->batchCloseRequest->setChannelCode($channelCode); return $this; }
     public function description(?string $description): self { $this->batchCloseRequest->setDescription($description); return $this; }
+    public function printReceipt(?BatchPrintReceiptOption $printReceipt): self { $this->batchCloseRequest->setPrintReceipt($printReceipt); return $this; }
 
     public function build(): BatchCloseRequest
     {

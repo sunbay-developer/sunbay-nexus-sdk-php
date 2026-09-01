@@ -114,25 +114,25 @@ class JsonUtil
             return null;
         }
 
-        // Convert array to object
+        return self::fromArray($data, $className);
+    }
+
+    /**
+     * Convert associative array to typed object
+     *
+     * @param array $data associative array
+     * @param string $className target class name
+     * @return mixed object
+     */
+    public static function fromArray(array $data, string $className)
+    {
         $object = new $className();
+        $reflection = new \ReflectionClass($object);
+
         foreach ($data as $key => $value) {
             // Handle array of objects (list)
             if (is_array($value) && !empty($value) && self::isList($value)) {
-                // Try to determine the array item class name from property type hints
-                $reflection = new \ReflectionClass($object);
-                $property = null;
-                try {
-                    $property = $reflection->getProperty($key);
-                } catch (\ReflectionException $e) {
-                    // Property doesn't exist, try camelCase
-                    $camelKey = self::camelCase($key);
-                    try {
-                        $property = $reflection->getProperty($camelKey);
-                    } catch (\ReflectionException $e2) {
-                        // Property still doesn't exist
-                    }
-                }
+                $property = self::resolveProperty($reflection, $key);
 
                 if ($property !== null) {
                     $type = $property->getType();
@@ -141,31 +141,12 @@ class JsonUtil
                         // Try to get doc comment to find array item type
                         $docComment = $property->getDocComment();
                         if ($docComment && preg_match('/@var\s+([^\s\[\]|]+)\[\]/', $docComment, $matches)) {
-                            $itemClassName = $matches[1];
-                            // Check if it's a fully qualified class name or needs namespace resolution
-                            if (strpos($itemClassName, '\\') === false) {
-                                // Try to resolve from use statements or same namespace
-                                $namespace = $reflection->getNamespaceName();
-                                // Check if class exists in current namespace
-                                $fullClassName = $namespace . '\\' . $itemClassName;
-                                if (class_exists($fullClassName)) {
-                                    $itemClassName = $fullClassName;
-                                } else {
-                                    // Try to find in use statements
-                                    $fileContent = file_get_contents($reflection->getFileName());
-                                    if (preg_match('/use\s+([^;]+)\s+' . preg_quote($itemClassName, '/') . '\s*;/', $fileContent, $useMatches)) {
-                                        $itemClassName = trim($useMatches[1]);
-                                    } else {
-                                        // Fallback to same namespace
-                                        $itemClassName = $fullClassName;
-                                    }
-                                }
-                            }
+                            $itemClassName = self::resolveClassName($matches[1], $reflection);
                             // Convert each array item
                             $convertedArray = [];
                             foreach ($value as $item) {
                                 if (is_array($item)) {
-                                    $convertedArray[] = self::fromJson(json_encode($item), $itemClassName);
+                                    $convertedArray[] = self::fromArray($item, $itemClassName);
                                 } else {
                                     $convertedArray[] = $item;
                                 }
@@ -177,26 +158,13 @@ class JsonUtil
             }
             // Handle nested objects (associative array)
             elseif (is_array($value) && !empty($value) && !self::isList($value)) {
-                // Try to determine the nested class name from property type hints
-                $reflection = new \ReflectionClass($object);
-                $property = null;
-                try {
-                    $property = $reflection->getProperty($key);
-                } catch (\ReflectionException $e) {
-                    // Property doesn't exist, try camelCase
-                    $camelKey = self::camelCase($key);
-                    try {
-                        $property = $reflection->getProperty($camelKey);
-                    } catch (\ReflectionException $e2) {
-                        // Property still doesn't exist
-                    }
-                }
+                $property = self::resolveProperty($reflection, $key);
 
                 if ($property !== null) {
                     $type = $property->getType();
                     if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
                         $nestedClassName = $type->getName();
-                        $value = self::fromJson(json_encode($value), $nestedClassName);
+                        $value = self::fromArray($value, $nestedClassName);
                     }
                 }
             }
@@ -212,20 +180,67 @@ class JsonUtil
                     $value = self::convertValueType($object, $method, $value);
                     $object->$method($value);
                 } elseif (property_exists($object, $key)) {
-                    $reflection = new \ReflectionClass($object);
-                    $property = $reflection->getProperty($key);
-                    $value = self::convertValueTypeByProperty($property, $value);
-                    $property->setValue($object, $value);
+                    $prop = $reflection->getProperty($key);
+                    $value = self::convertValueTypeByProperty($prop, $value);
+                    $prop->setValue($object, $value);
                 } elseif (property_exists($object, $camelKey)) {
-                    $reflection = new \ReflectionClass($object);
-                    $property = $reflection->getProperty($camelKey);
-                    $value = self::convertValueTypeByProperty($property, $value);
-                    $property->setValue($object, $value);
+                    $prop = $reflection->getProperty($camelKey);
+                    $value = self::convertValueTypeByProperty($prop, $value);
+                    $prop->setValue($object, $value);
                 }
             }
         }
 
         return $object;
+    }
+
+    /**
+     * Resolve a property on the reflection class by exact key or camelCase
+     *
+     * @param \ReflectionClass $reflection target class reflection
+     * @param string $key property name to look up
+     * @return \ReflectionProperty|null resolved property, or null
+     */
+    private static function resolveProperty(\ReflectionClass $reflection, string $key): ?\ReflectionProperty
+    {
+        try {
+            return $reflection->getProperty($key);
+        } catch (\ReflectionException $e) {
+            $camelKey = self::camelCase($key);
+            try {
+                return $reflection->getProperty($camelKey);
+            } catch (\ReflectionException $e2) {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Resolve a short class name to its fully-qualified name
+     *
+     * @param string $className short or fully-qualified class name
+     * @param \ReflectionClass $contextClass the class providing namespace context
+     * @return string fully-qualified class name
+     */
+    private static function resolveClassName(string $className, \ReflectionClass $contextClass): string
+    {
+        if (strpos($className, '\\') !== false) {
+            return $className;
+        }
+
+        $namespace = $contextClass->getNamespaceName();
+        $fullClassName = $namespace . '\\' . $className;
+        if (class_exists($fullClassName)) {
+            return $fullClassName;
+        }
+
+        // Try to find in use statements
+        $fileContent = file_get_contents($contextClass->getFileName());
+        if (preg_match('/use\s+([^;]+)\s+' . preg_quote($className, '/') . '\s*;/', $fileContent, $useMatches)) {
+            return trim($useMatches[1]);
+        }
+
+        return $fullClassName;
     }
 
     /**

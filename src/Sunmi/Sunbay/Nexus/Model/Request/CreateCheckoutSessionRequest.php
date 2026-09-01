@@ -15,6 +15,32 @@ use Sunmi\Sunbay\Nexus\Model\Common\SaleAmount;
  */
 class CreateCheckoutSessionRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $transactionRequestId = null,
+        ?string $referenceOrderId = null,
+        ?string $merchantId = null,
+        ?SaleAmount $amount = null,
+        ?string $description = null,
+        ?array $productList = null,
+        ?bool $collectBillingAddress = null,
+        ?bool $collectShippingAddress = null,
+        ?string $merchantReturnUrl = null,
+        ?string $notifyUrl = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($referenceOrderId !== null) $this->setReferenceOrderId($referenceOrderId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($amount !== null) $this->setAmount($amount);
+        if ($description !== null) $this->setDescription($description);
+        if ($productList !== null) $this->setProductList($productList);
+        if ($collectBillingAddress !== null) $this->setCollectBillingAddress($collectBillingAddress);
+        if ($collectShippingAddress !== null) $this->setCollectShippingAddress($collectShippingAddress);
+        if ($merchantReturnUrl !== null) $this->setMerchantReturnUrl($merchantReturnUrl);
+        if ($notifyUrl !== null) $this->setNotifyUrl($notifyUrl);
+    }
+
     private ?string $appId = null;
     private ?string $transactionRequestId = null;
     private ?string $referenceOrderId = null;

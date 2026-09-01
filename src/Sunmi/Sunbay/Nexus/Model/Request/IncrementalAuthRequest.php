@@ -15,6 +15,36 @@ use Sunmi\Sunbay\Nexus\Model\Common\AuthAmount;
  */
 class IncrementalAuthRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $originalTransactionId = null,
+        ?string $originalTransactionRequestId = null,
+        ?string $transactionRequestId = null,
+        ?AuthAmount $amount = null,
+        ?string $description = null,
+        ?string $terminalSn = null,
+        ?string $attach = null,
+        ?string $notifyUrl = null,
+        ?PrintReceiptOption $printReceipt = null,
+        ?bool $pushToTerminal = null,
+        ?string $terminalEventNotifyUrl = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($originalTransactionId !== null) $this->setOriginalTransactionId($originalTransactionId);
+        if ($originalTransactionRequestId !== null) $this->setOriginalTransactionRequestId($originalTransactionRequestId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($amount !== null) $this->setAmount($amount);
+        if ($description !== null) $this->setDescription($description);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+        if ($attach !== null) $this->setAttach($attach);
+        if ($notifyUrl !== null) $this->setNotifyUrl($notifyUrl);
+        if ($printReceipt !== null) $this->setPrintReceipt($printReceipt);
+        if ($pushToTerminal !== null) $this->setPushToTerminal($pushToTerminal);
+        if ($terminalEventNotifyUrl !== null) $this->setTerminalEventNotifyUrl($terminalEventNotifyUrl);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $originalTransactionId = null;
@@ -29,6 +59,8 @@ class IncrementalAuthRequest
     private ?PrintReceiptOption $printReceipt = null;
     /** Whether to push the transaction to the terminal. Default: true */
     private ?bool $pushToTerminal = null;
+    /** Terminal event async notify URL. Receive real-time terminal status events (card swipe, signature, print, etc.) during a transaction */
+    private ?string $terminalEventNotifyUrl = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -67,6 +99,9 @@ class IncrementalAuthRequest
     public function getPushToTerminal(): ?bool { return $this->pushToTerminal; }
     public function setPushToTerminal(?bool $pushToTerminal): self { $this->pushToTerminal = $pushToTerminal; return $this; }
 
+    public function getTerminalEventNotifyUrl(): ?string { return $this->terminalEventNotifyUrl; }
+    public function setTerminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->terminalEventNotifyUrl = $terminalEventNotifyUrl; return $this; }
+
     public static function builder(): IncrementalAuthRequestBuilder
     {
         return new IncrementalAuthRequestBuilder();
@@ -94,6 +129,7 @@ class IncrementalAuthRequestBuilder
     public function notifyUrl(?string $notifyUrl): self { $this->incrementalAuthRequest->setNotifyUrl($notifyUrl); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->incrementalAuthRequest->setPrintReceipt($printReceipt); return $this; }
     public function pushToTerminal(?bool $pushToTerminal): self { $this->incrementalAuthRequest->setPushToTerminal($pushToTerminal); return $this; }
+    public function terminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->incrementalAuthRequest->setTerminalEventNotifyUrl($terminalEventNotifyUrl); return $this; }
 
     public function build(): IncrementalAuthRequest
     {

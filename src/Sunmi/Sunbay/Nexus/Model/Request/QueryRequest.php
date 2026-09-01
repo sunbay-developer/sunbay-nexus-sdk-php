@@ -12,6 +12,18 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
  */
 class QueryRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $transactionId = null,
+        ?string $transactionRequestId = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($transactionId !== null) $this->setTransactionId($transactionId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $transactionId = null;

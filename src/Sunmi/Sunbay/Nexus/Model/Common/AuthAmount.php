@@ -15,6 +15,14 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class AuthAmount
 {
+    public function __construct(
+        ?int $orderAmount = null,
+        ?string $priceCurrency = null
+    ) {
+        if ($orderAmount !== null) $this->setOrderAmount($orderAmount);
+        if ($priceCurrency !== null) $this->setPriceCurrency($priceCurrency);
+    }
+
     private ?int $orderAmount = null;
     private ?string $priceCurrency = null;
 

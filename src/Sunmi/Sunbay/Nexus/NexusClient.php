@@ -23,6 +23,9 @@ use Sunmi\Sunbay\Nexus\Model\Request\SaleRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\TipAdjustRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\OnlineRefundRequest;
 use Sunmi\Sunbay\Nexus\Model\Request\VoidRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\BatchCloseListRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\MerchantQueryRequest;
+use Sunmi\Sunbay\Nexus\Model\Request\MerchantTerminalsQueryRequest;
 use Sunmi\Sunbay\Nexus\Model\Response\AbortResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\AuthResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\BatchCloseResponse;
@@ -39,11 +42,14 @@ use Sunmi\Sunbay\Nexus\Model\Response\RefundResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\SaleResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\TipAdjustResponse;
 use Sunmi\Sunbay\Nexus\Model\Response\VoidResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\BatchCloseListResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\MerchantQueryResponse;
+use Sunmi\Sunbay\Nexus\Model\Response\MerchantTerminalsQueryResponse;
 
 /**
- * Sunbay SDK main client
+ * Sunbay Nexus SDK main client
  *
- * This client is thread-safe and can be safely used by multiple threads.
+ * Thread-safe. Create once and reuse across your application.
  *
  * @author Andy Li
  * @since 2025-12-19
@@ -51,11 +57,11 @@ use Sunmi\Sunbay\Nexus\Model\Response\VoidResponse;
 class NexusClient
 {
     public const DEFAULT_BASE_URL = 'https://open.sunbay.us';
-    public const DEFAULT_CONNECT_TIMEOUT = 30000;
-    public const DEFAULT_READ_TIMEOUT = 60000;
+    public const DEFAULT_CONNECT_TIMEOUT = 10000;
+    public const DEFAULT_READ_TIMEOUT = 30000;
     public const DEFAULT_MAX_RETRIES = 3;
     public const DEFAULT_MAX_TOTAL = 200;
-    public const DEFAULT_MAX_PER_ROUTE = 20;
+    public const DEFAULT_MAX_PER_ROUTE = 200;
 
     private HttpClient $httpClient;
 
@@ -271,6 +277,39 @@ class NexusClient
     public function onlineRefund(OnlineRefundRequest $request): OnlineRefundResponse
     {
         return $this->httpClient->post(ApiConstants::PATH_CHECKOUT_REFUND, $request, OnlineRefundResponse::class);
+    }
+
+    /**
+     * Query settled batch list (GET /v1/settlement/batch-close-list).
+     *
+     * @param BatchCloseListRequest $request batch close list request
+     * @return BatchCloseListResponse batch close list response
+     */
+    public function batchCloseList(BatchCloseListRequest $request): BatchCloseListResponse
+    {
+        return $this->httpClient->get(ApiConstants::PATH_BATCH_CLOSE_LIST, $request, BatchCloseListResponse::class);
+    }
+
+    /**
+     * Query merchant info (GET /v1/merchant/query).
+     *
+     * @param MerchantQueryRequest $request merchant query request
+     * @return MerchantQueryResponse merchant query response
+     */
+    public function merchantQuery(MerchantQueryRequest $request): MerchantQueryResponse
+    {
+        return $this->httpClient->get(ApiConstants::PATH_MERCHANT_QUERY, $request, MerchantQueryResponse::class);
+    }
+
+    /**
+     * Query merchant terminals (GET /v1/merchant/terminals/query).
+     *
+     * @param MerchantTerminalsQueryRequest $request merchant terminals query request
+     * @return MerchantTerminalsQueryResponse merchant terminals query response
+     */
+    public function merchantTerminalsQuery(MerchantTerminalsQueryRequest $request): MerchantTerminalsQueryResponse
+    {
+        return $this->httpClient->get(ApiConstants::PATH_MERCHANT_TERMINALS_QUERY, $request, MerchantTerminalsQueryResponse::class);
     }
 
     /**

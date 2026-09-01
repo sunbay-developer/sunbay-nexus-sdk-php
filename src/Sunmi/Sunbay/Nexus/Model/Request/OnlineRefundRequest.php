@@ -17,6 +17,28 @@ use Sunmi\Sunbay\Nexus\Model\Common\OnlineRefundAmount;
  */
 class OnlineRefundRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $transactionRequestId = null,
+        ?string $originalTransactionId = null,
+        ?string $originalTransactionRequestId = null,
+        ?OnlineRefundAmount $amount = null,
+        ?string $description = null,
+        ?string $attach = null,
+        ?string $notifyUrl = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($originalTransactionId !== null) $this->setOriginalTransactionId($originalTransactionId);
+        if ($originalTransactionRequestId !== null) $this->setOriginalTransactionRequestId($originalTransactionRequestId);
+        if ($amount !== null) $this->setAmount($amount);
+        if ($description !== null) $this->setDescription($description);
+        if ($attach !== null) $this->setAttach($attach);
+        if ($notifyUrl !== null) $this->setNotifyUrl($notifyUrl);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $transactionRequestId = null;

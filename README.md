@@ -2,15 +2,16 @@
 
 Official PHP SDK for Sunbay Nexus Payment Platform
 
-**Current Version:** 1.0.4
+**Current Version:** 1.0.5
 
 ## Features
 
 - ✅ Simple and intuitive API
-- ✅ Builder pattern for easy request construction
-- ✅ Support PHP 8.1+
+- ✅ PHP 8.1+ named arguments for clean, readable construction
+- ✅ Fluent setter & Builder pattern also supported
 - ✅ Automatic authentication
 - ✅ Automatic retry for GET requests
+- ✅ HTTP connection pool with configurable limits
 - ✅ Comprehensive exception handling
 - ✅ Minimal dependencies
 
@@ -38,70 +39,82 @@ composer install
 
 ### 1. Initialize Client
 
-The `NexusClient` is thread-safe and can be reused across multiple threads.
+The `NexusClient` is thread-safe and **should be instantiated once** and reused throughout
+your application's lifecycle. Each instance holds its own HTTP connection pool; creating a
+new client per request wastes connections and defeats connection reuse.
+
+**Option A — Builder pattern (recommended):**
 
 ```php
 <?php
 use Sunmi\Sunbay\Nexus\NexusClient;
 
-// Create client
 $client = NexusClient::builder()
     ->apiKey('your_api_key_here')
-    ->baseUrl('https://open.sunbay.us')
+    ->baseUrl('https://open.sunbay.us')      // optional, defaults to https://open.sunbay.us
+    ->connectTimeout(10000)                   // optional, default 10000ms
+    ->readTimeout(30000)                      // optional, default 30000ms
+    ->maxRetries(3)                           // optional, GET retry count, default 3
+    ->maxTotal(200)                           // optional, max pool connections, default 200
+    ->maxPerRoute(200)                        // optional, max connections per host, default 200
     ->build();
-
-// Use the client throughout your application
-// The client is reusable and thread-safe
 ```
 
 ### 2. Sale Transaction
 
+> **Important:** All amount fields use the smallest currency unit (integer).  
+> For example: 100.00 USD = 10000 cents.
+
 ```php
 <?php
-use Sunmi\Sunbay\Nexus\NexusClient;
-use Sunmi\Sunbay\Nexus\Exception\SunbayBusinessException;
-use Sunmi\Sunbay\Nexus\Exception\SunbayNetworkException;
 use Sunmi\Sunbay\Nexus\Model\Common\SaleAmount;
 use Sunmi\Sunbay\Nexus\Model\Request\SaleRequest;
-use Sunmi\Sunbay\Nexus\Model\Response\SaleResponse;
+use Sunmi\Sunbay\Nexus\Exception\SunbayBusinessException;
+use Sunmi\Sunbay\Nexus\Exception\SunbayNetworkException;
 
-// Assume client is already initialized
-// $client = ... (from step 1)
+// Build amount (smallest currency unit)
+$amount = new SaleAmount(
+    orderAmount: 10000,       // 100.00 USD = 10000 cents
+    priceCurrency: 'USD'
+);
 
-// Build amount using Builder pattern
-// Amount is in cents (e.g., 10000 = $100.00)
-$amount = SaleAmount::builder()
-    ->orderAmount(10000)
-    ->priceCurrency('USD')
-    ->build();
+// Build sale request
+$request = new SaleRequest(
+    appId: 'app_123456',
+    merchantId: 'mch_789012',
+    referenceOrderId: 'ORDER20231119001',
+    transactionRequestId: 'PAY_REQ_' . time(),
+    amount: $amount,
+    description: 'Product purchase',
+    terminalSn: 'T1234567890'
+);
 
-// Build sale request using Builder pattern
-$request = SaleRequest::builder()
-    ->appId('app_123456')
-    ->merchantId('mch_789012')
-    ->referenceOrderId('ORDER20231119001')
-    ->transactionRequestId('PAY_REQ_' . time())
-    ->amount($amount)
-    ->description('Product purchase')
-    ->terminalSn('T1234567890')
-    ->build();
-
-// Execute transaction
 try {
+    // Execute transaction
+    // SDK automatically throws SunbayBusinessException when code != "0"
+    // If we reach here, the response is guaranteed successful
     $response = $client->sale($request);
-    // If we reach here, the transaction was successful (code = "0")
-    // Business exceptions are automatically thrown for non-zero codes
+
     echo "Transaction ID: " . $response->getTransactionId() . "\n";
+    echo "Reference Order ID: " . $response->getReferenceOrderId() . "\n";
 } catch (SunbayNetworkException $e) {
+    // Network error
     echo "Network Error: " . $e->getMessage() . "\n";
+    if ($e->isRetryable()) {
+        echo "This error is retryable\n";
+    }
 } catch (SunbayBusinessException $e) {
+    // Business error
     echo "API Error: " . $e->getErrorCode() . " - " . $e->getMessage() . "\n";
+    if ($e->getTraceId()) {
+        echo "Trace ID: " . $e->getTraceId() . "\n";
+    }
 }
 ```
 
 ## API Methods
 
-All request classes support Builder pattern for easy construction.
+All request classes support **named arguments** (recommended), fluent setters, and Builder pattern.
 
 ### Transaction APIs
 
@@ -121,7 +134,21 @@ All request classes support Builder pattern for easy construction.
 
 ### Settlement APIs
 
+- `batchQuery(BatchQueryRequest)` - Batch query
 - `batchClose(BatchCloseRequest)` - Batch close
+- `batchCloseList(BatchCloseListRequest)` - Query settled batch list
+
+### Merchant APIs
+
+- `merchantQuery(MerchantQueryRequest)` - Query merchant information
+- `merchantTerminalsQuery(MerchantTerminalsQueryRequest)` - Query merchant terminals (token-based pagination, max 100 per page)
+
+### Online Checkout APIs
+
+- `createCheckoutSession(CreateCheckoutSessionRequest)` - Create hosted payment page session
+- `expireCheckoutSession(ExpireCheckoutSessionRequest)` - Expire checkout session
+- `checkoutSale(CheckoutSaleRequest)` - Direct online checkout sale (Google Pay / Apple Pay)
+- `onlineRefund(OnlineRefundRequest)` - Online refund
 
 ## Response Objects
 
@@ -175,12 +202,12 @@ use Psr\Log\LoggerInterface;
 $client = NexusClient::builder()
     ->apiKey('sk_test_xxx')
     ->baseUrl('https://open.sunbay.us')  // Default: https://open.sunbay.us
-    ->connectTimeout(30000)               // Default: 30000ms (30 seconds)
-    ->readTimeout(60000)                   // Default: 60000ms (60 seconds)
-    ->maxRetries(3)                        // Default: 3 retries for GET requests
-    ->maxTotal(200)                        // Default: 200 (max total connections in pool)
-    ->maxPerRoute(20)                      // Default: 20 (max connections per route)
-    ->logger($logger)                      // Optional: PSR-3 logger for request/response logging
+    ->connectTimeout(10000)               // Default: 10000ms (10 seconds)
+    ->readTimeout(30000)                  // Default: 30000ms (30 seconds)
+    ->maxRetries(3)                       // Default: 3 retries for GET requests
+    ->maxTotal(200)                       // Default: 200 (max total connections in pool)
+    ->maxPerRoute(200)                    // Default: 200 (max connections per host)
+    ->logger($logger)                     // Optional: PSR-3 logger for request/response logging
     ->build();
 ```
 
@@ -224,9 +251,9 @@ use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
 use Sunmi\Sunbay\Nexus\Model\Response\QueryResponse;
 
 // Use enum for type safety when building requests
-$paymentMethod = PaymentMethodInfo::builder()
-    ->category(PaymentCategory::CARD->value)  // Enum automatically converts to string
-    ->build();
+$paymentMethod = new PaymentMethodInfo(
+    category: PaymentCategory::CARD->value
+);
 
 // When reading responses, validate enum values
 $queryResponse = $client->query($request);

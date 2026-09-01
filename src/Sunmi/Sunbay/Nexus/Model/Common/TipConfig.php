@@ -12,6 +12,26 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class TipConfig
 {
+    public function __construct(
+        ?bool $useHostConfig = null,
+        ?bool $onScreenTip = null,
+        ?string $tipMode = null,
+        ?bool $tipWithTax = null,
+        ?TipSuggestions $suggestions = null
+    ) {
+        if ($useHostConfig !== null) $this->setUseHostConfig($useHostConfig);
+        if ($onScreenTip !== null) $this->setOnScreenTip($onScreenTip);
+        if ($tipMode !== null) $this->setTipMode($tipMode);
+        if ($tipWithTax !== null) $this->setTipWithTax($tipWithTax);
+        if ($suggestions !== null) $this->setSuggestions($suggestions);
+    }
+
+    /**
+     * Whether to use SUNBAY platform tip configuration.
+     * When true, all other tipConfig parameters (onScreenTip, tipMode, tipWithTax, suggestions) are ignored.
+     */
+    private ?bool $useHostConfig = null;
+
     /**
      * Whether to show on-screen tip prompt
      */
@@ -31,6 +51,17 @@ class TipConfig
      * Tip suggestions configuration
      */
     private ?TipSuggestions $suggestions = null;
+
+    public function getUseHostConfig(): ?bool
+    {
+        return $this->useHostConfig;
+    }
+
+    public function setUseHostConfig(?bool $useHostConfig): self
+    {
+        $this->useHostConfig = $useHostConfig;
+        return $this;
+    }
 
     public function getOnScreenTip(): ?bool
     {
@@ -89,6 +120,12 @@ class TipConfigBuilder
     public function __construct()
     {
         $this->tipConfig = new TipConfig();
+    }
+
+    public function useHostConfig(?bool $useHostConfig): self
+    {
+        $this->tipConfig->setUseHostConfig($useHostConfig);
+        return $this;
     }
 
     public function onScreenTip(?bool $onScreenTip): self

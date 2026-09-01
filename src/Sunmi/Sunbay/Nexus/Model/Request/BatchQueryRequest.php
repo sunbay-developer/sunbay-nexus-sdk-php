@@ -12,6 +12,16 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
  */
 class BatchQueryRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $terminalSn = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $terminalSn = null;

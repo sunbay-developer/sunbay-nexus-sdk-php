@@ -6,8 +6,10 @@ namespace Sunmi\Sunbay\Nexus\Model\Request;
 
 use Sunmi\Sunbay\Nexus\Enum\CardNetworkType;
 use Sunmi\Sunbay\Nexus\Enum\PrintReceiptOption;
+use Sunmi\Sunbay\Nexus\Enum\SignatureEntryLocation;
 use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
 use Sunmi\Sunbay\Nexus\Model\Common\RefundAmount;
+use Sunmi\Sunbay\Nexus\Model\Common\SignatureConfig;
 
 /**
  * Refund request
@@ -17,6 +19,48 @@ use Sunmi\Sunbay\Nexus\Model\Common\RefundAmount;
  */
 class RefundRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $originalTransactionId = null,
+        ?string $originalTransactionRequestId = null,
+        ?string $referenceOrderId = null,
+        ?string $transactionRequestId = null,
+        ?RefundAmount $amount = null,
+        ?PaymentMethodInfo $paymentMethod = null,
+        ?string $description = null,
+        ?string $terminalSn = null,
+        ?string $attach = null,
+        ?string $notifyUrl = null,
+        ?string $timeExpire = null,
+        ?PrintReceiptOption $printReceipt = null,
+        ?bool $pushToTerminal = null,
+        ?CardNetworkType $cardNetworkType = null,
+        ?SignatureEntryLocation $signatureEntryLocation = null,
+        ?SignatureConfig $signatureConfig = null,
+        ?string $terminalEventNotifyUrl = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($originalTransactionId !== null) $this->setOriginalTransactionId($originalTransactionId);
+        if ($originalTransactionRequestId !== null) $this->setOriginalTransactionRequestId($originalTransactionRequestId);
+        if ($referenceOrderId !== null) $this->setReferenceOrderId($referenceOrderId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($amount !== null) $this->setAmount($amount);
+        if ($paymentMethod !== null) $this->setPaymentMethod($paymentMethod);
+        if ($description !== null) $this->setDescription($description);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+        if ($attach !== null) $this->setAttach($attach);
+        if ($notifyUrl !== null) $this->setNotifyUrl($notifyUrl);
+        if ($timeExpire !== null) $this->setTimeExpire($timeExpire);
+        if ($printReceipt !== null) $this->setPrintReceipt($printReceipt);
+        if ($pushToTerminal !== null) $this->setPushToTerminal($pushToTerminal);
+        if ($cardNetworkType !== null) $this->setCardNetworkType($cardNetworkType);
+        if ($signatureEntryLocation !== null) $this->setSignatureEntryLocation($signatureEntryLocation);
+        if ($signatureConfig !== null) $this->setSignatureConfig($signatureConfig);
+        if ($terminalEventNotifyUrl !== null) $this->setTerminalEventNotifyUrl($terminalEventNotifyUrl);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $originalTransactionId = null;
@@ -36,6 +80,15 @@ class RefundRequest
     private ?bool $pushToTerminal = null;
     /** Card network type. Only when paymentMethod.category=CARD; omit for auto-detect */
     private ?CardNetworkType $cardNetworkType = null;
+    /**
+     * @deprecated Use signatureConfig instead
+     * Signature entry location. Only for unreferenced refunds. Optional: ON_SCREEN / ON_RECEIPT / NONE
+     */
+    private ?SignatureEntryLocation $signatureEntryLocation = null;
+    /** Signature configuration. Only for unreferenced refunds. Replaces signatureEntryLocation */
+    private ?SignatureConfig $signatureConfig = null;
+    /** Terminal event async notify URL. Receive real-time terminal status events (card swipe, signature, print, etc.) during a transaction */
+    private ?string $terminalEventNotifyUrl = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -86,6 +139,16 @@ class RefundRequest
     public function getCardNetworkType(): ?CardNetworkType { return $this->cardNetworkType; }
     public function setCardNetworkType(?CardNetworkType $cardNetworkType): self { $this->cardNetworkType = $cardNetworkType; return $this; }
 
+    public function getSignatureEntryLocation(): ?SignatureEntryLocation { return $this->signatureEntryLocation; }
+    /** @deprecated Use setSignatureConfig() instead */
+    public function setSignatureEntryLocation(?SignatureEntryLocation $signatureEntryLocation): self { $this->signatureEntryLocation = $signatureEntryLocation; return $this; }
+
+    public function getSignatureConfig(): ?SignatureConfig { return $this->signatureConfig; }
+    public function setSignatureConfig(?SignatureConfig $signatureConfig): self { $this->signatureConfig = $signatureConfig; return $this; }
+
+    public function getTerminalEventNotifyUrl(): ?string { return $this->terminalEventNotifyUrl; }
+    public function setTerminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->terminalEventNotifyUrl = $terminalEventNotifyUrl; return $this; }
+
     public static function builder(): RefundRequestBuilder
     {
         return new RefundRequestBuilder();
@@ -117,6 +180,9 @@ class RefundRequestBuilder
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->refundRequest->setPrintReceipt($printReceipt); return $this; }
     public function pushToTerminal(?bool $pushToTerminal): self { $this->refundRequest->setPushToTerminal($pushToTerminal); return $this; }
     public function cardNetworkType(?CardNetworkType $cardNetworkType): self { $this->refundRequest->setCardNetworkType($cardNetworkType); return $this; }
+    public function signatureEntryLocation(?SignatureEntryLocation $signatureEntryLocation): self { $this->refundRequest->setSignatureEntryLocation($signatureEntryLocation); return $this; }
+    public function signatureConfig(?SignatureConfig $signatureConfig): self { $this->refundRequest->setSignatureConfig($signatureConfig); return $this; }
+    public function terminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->refundRequest->setTerminalEventNotifyUrl($terminalEventNotifyUrl); return $this; }
 
     public function build(): RefundRequest
     {

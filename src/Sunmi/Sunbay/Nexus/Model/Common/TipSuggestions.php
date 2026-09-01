@@ -14,6 +14,16 @@ use InvalidArgumentException;
  */
 class TipSuggestions
 {
+    public function __construct(
+        ?array $names = null,
+        ?string $feeMode = null,
+        ?array $values = null
+    ) {
+        if ($names !== null) $this->setNames($names);
+        if ($feeMode !== null) $this->setFeeMode($feeMode);
+        if ($values !== null) $this->setValues($values);
+    }
+
     /**
      * Display names for tip options
      */

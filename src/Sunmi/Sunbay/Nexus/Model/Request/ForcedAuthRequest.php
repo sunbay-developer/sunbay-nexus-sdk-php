@@ -17,6 +17,38 @@ use Sunmi\Sunbay\Nexus\Model\Common\PaymentMethodInfo;
  */
 class ForcedAuthRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $referenceOrderId = null,
+        ?string $transactionRequestId = null,
+        ?AuthAmount $amount = null,
+        ?PaymentMethodInfo $paymentMethod = null,
+        ?string $description = null,
+        ?string $terminalSn = null,
+        ?string $attach = null,
+        ?string $notifyUrl = null,
+        ?string $timeExpire = null,
+        ?PrintReceiptOption $printReceipt = null,
+        ?CardNetworkType $cardNetworkType = null,
+        ?string $terminalEventNotifyUrl = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($referenceOrderId !== null) $this->setReferenceOrderId($referenceOrderId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($amount !== null) $this->setAmount($amount);
+        if ($paymentMethod !== null) $this->setPaymentMethod($paymentMethod);
+        if ($description !== null) $this->setDescription($description);
+        if ($terminalSn !== null) $this->setTerminalSn($terminalSn);
+        if ($attach !== null) $this->setAttach($attach);
+        if ($notifyUrl !== null) $this->setNotifyUrl($notifyUrl);
+        if ($timeExpire !== null) $this->setTimeExpire($timeExpire);
+        if ($printReceipt !== null) $this->setPrintReceipt($printReceipt);
+        if ($cardNetworkType !== null) $this->setCardNetworkType($cardNetworkType);
+        if ($terminalEventNotifyUrl !== null) $this->setTerminalEventNotifyUrl($terminalEventNotifyUrl);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $referenceOrderId = null;
@@ -32,6 +64,8 @@ class ForcedAuthRequest
     private ?PrintReceiptOption $printReceipt = null;
     /** Card network type. Only when paymentMethod.category=CARD; omit for auto-detect */
     private ?CardNetworkType $cardNetworkType = null;
+    /** Terminal event async notify URL. Receive real-time terminal status events (card swipe, signature, print, etc.) during a transaction */
+    private ?string $terminalEventNotifyUrl = null;
 
     // Getters and setters
     public function getAppId(): ?string { return $this->appId; }
@@ -73,6 +107,9 @@ class ForcedAuthRequest
     public function getCardNetworkType(): ?CardNetworkType { return $this->cardNetworkType; }
     public function setCardNetworkType(?CardNetworkType $cardNetworkType): self { $this->cardNetworkType = $cardNetworkType; return $this; }
 
+    public function getTerminalEventNotifyUrl(): ?string { return $this->terminalEventNotifyUrl; }
+    public function setTerminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->terminalEventNotifyUrl = $terminalEventNotifyUrl; return $this; }
+
     public static function builder(): ForcedAuthRequestBuilder
     {
         return new ForcedAuthRequestBuilder();
@@ -101,6 +138,7 @@ class ForcedAuthRequestBuilder
     public function timeExpire(?string $timeExpire): self { $this->forcedAuthRequest->setTimeExpire($timeExpire); return $this; }
     public function printReceipt(?PrintReceiptOption $printReceipt): self { $this->forcedAuthRequest->setPrintReceipt($printReceipt); return $this; }
     public function cardNetworkType(?CardNetworkType $cardNetworkType): self { $this->forcedAuthRequest->setCardNetworkType($cardNetworkType); return $this; }
+    public function terminalEventNotifyUrl(?string $terminalEventNotifyUrl): self { $this->forcedAuthRequest->setTerminalEventNotifyUrl($terminalEventNotifyUrl); return $this; }
 
     public function build(): ForcedAuthRequest
     {

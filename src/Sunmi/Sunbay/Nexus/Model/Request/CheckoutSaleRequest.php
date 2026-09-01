@@ -17,6 +17,40 @@ use Sunmi\Sunbay\Nexus\Model\Common\SaleAmount;
  */
 class CheckoutSaleRequest
 {
+    public function __construct(
+        ?string $appId = null,
+        ?string $merchantId = null,
+        ?string $transactionRequestId = null,
+        ?string $referenceOrderId = null,
+        ?string $description = null,
+        ?SaleAmount $amount = null,
+        ?array $productList = null,
+        ?OnlineWalletPaymentMethod $paymentMethod = null,
+        ?string $cardEncryptedData = null,
+        ?string $customerEmail = null,
+        ?string $customerName = null,
+        ?CheckoutAddress $billingAddress = null,
+        ?CheckoutAddress $shippingAddress = null,
+        ?string $notifyUrl = null,
+        ?string $merchantReturnUrl = null
+    ) {
+        if ($appId !== null) $this->setAppId($appId);
+        if ($merchantId !== null) $this->setMerchantId($merchantId);
+        if ($transactionRequestId !== null) $this->setTransactionRequestId($transactionRequestId);
+        if ($referenceOrderId !== null) $this->setReferenceOrderId($referenceOrderId);
+        if ($description !== null) $this->setDescription($description);
+        if ($amount !== null) $this->setAmount($amount);
+        if ($productList !== null) $this->setProductList($productList);
+        if ($paymentMethod !== null) $this->setPaymentMethod($paymentMethod);
+        if ($cardEncryptedData !== null) $this->setCardEncryptedData($cardEncryptedData);
+        if ($customerEmail !== null) $this->setCustomerEmail($customerEmail);
+        if ($customerName !== null) $this->setCustomerName($customerName);
+        if ($billingAddress !== null) $this->setBillingAddress($billingAddress);
+        if ($shippingAddress !== null) $this->setShippingAddress($shippingAddress);
+        if ($notifyUrl !== null) $this->setNotifyUrl($notifyUrl);
+        if ($merchantReturnUrl !== null) $this->setMerchantReturnUrl($merchantReturnUrl);
+    }
+
     private ?string $appId = null;
     private ?string $merchantId = null;
     private ?string $transactionRequestId = null;

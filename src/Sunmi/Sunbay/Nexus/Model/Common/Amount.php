@@ -13,6 +13,24 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
  */
 class Amount
 {
+    public function __construct(
+        ?string $priceCurrency = null,
+        ?int $transAmount = null,
+        ?int $orderAmount = null,
+        ?int $taxAmount = null,
+        ?int $surchargeAmount = null,
+        ?int $tipAmount = null,
+        ?int $cashbackAmount = null
+    ) {
+        if ($priceCurrency !== null) $this->setPriceCurrency($priceCurrency);
+        if ($transAmount !== null) $this->setTransAmount($transAmount);
+        if ($orderAmount !== null) $this->setOrderAmount($orderAmount);
+        if ($taxAmount !== null) $this->setTaxAmount($taxAmount);
+        if ($surchargeAmount !== null) $this->setSurchargeAmount($surchargeAmount);
+        if ($tipAmount !== null) $this->setTipAmount($tipAmount);
+        if ($cashbackAmount !== null) $this->setCashbackAmount($cashbackAmount);
+    }
+
     private ?string $priceCurrency = null;
     private ?int $transAmount = null;
     private ?int $orderAmount = null;
