@@ -43,7 +43,7 @@ The `NexusClient` is thread-safe and **should be instantiated once** and reused 
 your application's lifecycle. Each instance holds its own HTTP connection pool; creating a
 new client per request wastes connections and defeats connection reuse.
 
-**Option A — Builder pattern (recommended):**
+**Builder pattern:**
 
 ```php
 <?php
