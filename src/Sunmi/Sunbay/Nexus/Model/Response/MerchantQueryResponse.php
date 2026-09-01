@@ -18,10 +18,6 @@ class MerchantQueryResponse extends BaseResponse
     private ?string $dbaName = null;
     /** Merchant Category Code (ISO 18245) */
     private ?string $mcc = null;
-    /** URL of the merchant logo */
-    private ?string $logo = null;
-    /** URL of the merchant's small icon / favicon */
-    private ?string $smallLogo = null;
     /** ISO 3166-1 alpha-3 country code */
     private ?string $country = null;
     /** State or province name */
@@ -52,12 +48,6 @@ class MerchantQueryResponse extends BaseResponse
 
     public function getMcc(): ?string { return $this->mcc; }
     public function setMcc(?string $mcc): self { $this->mcc = $mcc; return $this; }
-
-    public function getLogo(): ?string { return $this->logo; }
-    public function setLogo(?string $logo): self { $this->logo = $logo; return $this; }
-
-    public function getSmallLogo(): ?string { return $this->smallLogo; }
-    public function setSmallLogo(?string $smallLogo): self { $this->smallLogo = $smallLogo; return $this; }
 
     public function getCountry(): ?string { return $this->country; }
     public function setCountry(?string $country): self { $this->country = $country; return $this; }

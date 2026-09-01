@@ -12,12 +12,14 @@ namespace Sunmi\Sunbay\Nexus\Model\Common;
 class TerminalItem
 {
     public function __construct(
+        ?string $terminalId = null,
         ?string $sn = null,
         ?string $vendor = null,
         ?string $model = null,
         ?string $createTime = null,
         ?array $tidList = null
     ) {
+        if ($terminalId !== null) $this->setTerminalId($terminalId);
         if ($sn !== null) $this->setSn($sn);
         if ($vendor !== null) $this->setVendor($vendor);
         if ($model !== null) $this->setModel($model);
@@ -25,6 +27,8 @@ class TerminalItem
         if ($tidList !== null) $this->setTidList($tidList);
     }
 
+    /** Terminal ID */
+    private ?string $terminalId = null;
     /** Terminal serial number */
     private ?string $sn = null;
     /** Device vendor / manufacturer */
@@ -38,6 +42,9 @@ class TerminalItem
      * @var TerminalTidItem[]|null
      */
     private ?array $tidList = null;
+
+    public function getTerminalId(): ?string { return $this->terminalId; }
+    public function setTerminalId(?string $terminalId): self { $this->terminalId = $terminalId; return $this; }
 
     public function getSn(): ?string { return $this->sn; }
     public function setSn(?string $sn): self { $this->sn = $sn; return $this; }
